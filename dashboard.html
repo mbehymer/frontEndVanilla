@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/loading.css">
+        <script type="text/javascript" src="js/loader.js"></script>
+        <script type="text/javascript" src="js/serverCalls.js"></script>
+        <script type="text/javascript" src="js/popUp-utilities.js"></script>
+        <script type="text/javascript" src="js/navigation.js"></script>
+        <script type="text/javascript" src="js/dashboard.js"></script>
+    </head>
+    <body>
+        <main id="dashboard-main">
+            
+            <h2>Dashboard</h2>
+            <button onclick="grabRefreshToken()" class="btn btn-primary">Refresh authentication</button>
+            <button id="get-characters-btn" onclick="processGettingCharacters()" class="btn btn-primary">Get Characters</button>
+            <div id="characters-container">
+                <p>No data has been requested</p>
+            </div>
+        
+        </main>
+    </body>
+</html>
