@@ -58,6 +58,27 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
 }
 
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.jc-end {
+    justify-content: end;
+}
+
+.setting-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    /* width: 10px;
+    height: 10px; */
+    padding: 0.25rem 0.5rem;
+    margin: 5px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 2px 2px #00000033;
+}
+
 header {
     margin-bottom: 1rem;
     box-shadow: 0px 0px 5px 1px #00000033;

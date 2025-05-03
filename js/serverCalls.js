@@ -1,5 +1,9 @@
 let accessToken;
 
+// let BASE_URL = 'https://nodejsserver-a47a.onrender.com/'
+let BASE_URL = 'http://localhost:8080/'
+
+
 function redirect(path) {
     window.location.href = path;
 }
@@ -20,7 +24,7 @@ async function authenticate() {
     await delay(2000);
 
     try {
-        const response = await fetch('http://localhost:8080/auth', {
+        const response = await fetch(BASE_URL + 'auth', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -40,7 +44,7 @@ async function authenticate() {
 async function grabRefreshToken(onSuccess=()=>{}, onFailure=()=>{}) {
     // let refreshToken;
     try {
-        const response = await fetch('http://localhost:8080/refresh', {
+        const response = await fetch(BASE_URL + 'refresh', {
             method: 'GET',
             withCredentials: true,
             credentials: 'include'
@@ -60,7 +64,7 @@ async function grabRefreshToken(onSuccess=()=>{}, onFailure=()=>{}) {
 async function register(info={user: false, pwd: false},onSuccess=()=>{}, onFailure=()=>{}) {
     if (!info.user || !info.pwd) return false;
     try {
-        const response = await fetch('http://localhost:8080/register', {
+        const response = await fetch(BASE_URL + 'register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -79,7 +83,7 @@ async function register(info={user: false, pwd: false},onSuccess=()=>{}, onFailu
 async function logout(onSuccess=()=>{}, onFailure=()=>{}) {
     // let refreshToken;
     try {
-        const response = await fetch('http://localhost:8080/logout', {
+        const response = await fetch(BASE_URL + 'logout', {
             method: 'GET',
             withCredentials: true,
             credentials: 'include'
@@ -101,7 +105,7 @@ async function logout(onSuccess=()=>{}, onFailure=()=>{}) {
 async function getCharacters(onSuccess=()=>{}, onFailure=()=>{}) {
     // let refreshToken = await grabRefreshToken();
     try {
-        const response = await fetch('http://localhost:8080/characters', {
+        const response = await fetch(BASE_URL + 'characters', {
             method: 'GET',
             headers: { 'authorization': `Bearer ${accessToken.accessToken}` },
             credentials: 'include',
@@ -124,7 +128,7 @@ async function getCharacters(onSuccess=()=>{}, onFailure=()=>{}) {
 async function updateCharacter(character, onSuccess=()=>{}, onFailure=()=>{}) {
     // let refreshToken = await grabRefreshToken();
     try {
-        const response = await fetch('http://localhost:8080/characters', {
+        const response = await fetch(BASE_URL + 'characters', {
             method: 'PUT',
             headers: { 
                 'authorization': `Bearer ${accessToken.accessToken}`,

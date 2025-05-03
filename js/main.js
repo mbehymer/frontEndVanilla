@@ -15,3 +15,8 @@ function transitionToRegister() {
         redirect('/register.html')
     }, false);
 }
+
+let source = document.querySelector('#source-selector');
+source.addEventListener('change', e => {
+    BASE_URL = e.target.value;
+})
