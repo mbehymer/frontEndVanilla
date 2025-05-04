@@ -18,5 +18,5 @@ function transitionToRegister() {
 
 let source = document.querySelector('#source-selector');
 source.addEventListener('change', e => {
-    BASE_URL = e.target.value;
+    localStorage.setItem('SERVER_SRC', e.target.value);
 })
