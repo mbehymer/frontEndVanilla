@@ -21,10 +21,10 @@ function processRegistration() {
     if (!verifyPassword(pwdField.value,pwdVerifyField.value)) return quickMessage('Passwords do not match!',{time:25000, enabled:true});
 
     // submit the registration fields
-    register({user: userField.value, pwd: pwdField.value}, () => {
+    register({user: userField.value, pwd: pwdField.value}, async () => {
         
         
-        let response = authenticate();
+        let response = await authenticate();
         if (response.ok) { 
             insertHeaderNav('body');
             quickMessage('Registration successful', {time:0, enabled: false});

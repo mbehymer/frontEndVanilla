@@ -16,7 +16,10 @@ function transitionToRegister() {
     }, false);
 }
 
-let source = document.querySelector('#source-selector');
-source.addEventListener('change', e => {
-    localStorage.setItem('SERVER_SRC', e.target.value);
-})
+(() => {
+    let source = document.querySelector('#source-selector');
+    if (localStorage.getItem('SERVER_SRC')) { source.value = localStorage.getItem('SERVER_SRC');}
+    source.addEventListener('change', e => {
+        localStorage.setItem('SERVER_SRC', e.target.value);
+    })
+})();
