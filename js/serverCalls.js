@@ -23,7 +23,7 @@ async function authenticate() {
     pwdField.value = '';
     loader.start();
 
-    await delay(2000);
+    // await delay(1000);
 
     try {
         const response = await fetch(BASE_URL() + 'auth', {
