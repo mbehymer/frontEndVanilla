@@ -135,11 +135,57 @@ function updateField(steps, currentStructure, newValue) {
     return newStructure;
 }
 
+// =================== Create New Character ======================
 
+
+function createNewCharacter() {
+    a = Array.from(document.querySelector('#character-form').children).filter(el => el.tagName === 'DIV').map(div => { return [div.querySelector('input').id, div.querySelector('input').value]} );
+    console.log(a);
+    c=a.map(ch=> {
+        return [ch[0].split('character-')[1],ch[1]];
+    })
+    char={};
+    c.forEach(el=> {
+        if (el[0].includes('-')) {
+            chain =el[0].split('-');
+            if (char[chain[0]] === undefined) char[chain[0]] = {}
+            char[chain[0]][chain[1]]=el[1];
+        } else { char[el[0]]=el[1] }
+    });
+    console.log(char);
+    createCharacter(char, (character)=> {console.log('character',character)}, ()=>{quickMessage('Failed to create character', {time: 5000, enabled: true})})
+}
+        
+function importCharacter(event) {
+    const file = event.target.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const fileContent = e.target.result;
+            const container=document.querySelector('#character-import');
+            if (container.querySelector('textarea')) {
+                container.removeChild(container.$('textarea'));
+            }
+            const textArea = document.createElement('textarea');
+            textArea.value = fileContent;
+            container.appendChild(textArea);
+            // Process the file content here
+        };
+
+        reader.onerror = (e) => {
+            console.error("File could not be read! Code " + e.target.error.code);
+        };
+        reader.readAsText(file); // Use readAsText for text files
+    }
+}
+
+const characterFile=document.querySelector('#character-import-file');
+characterFile.addEventListener('change', (event) => {  importCharacter(event) })
 
 // =================== On Load Run Code Below ====================
 
 // Get the refresh token, and if the user isn't authorized send them ot the login page. Otherwise show the header navigation
 setTimeout(() => {
     grabRefreshToken(()=>{insertHeaderNav('body')}, ()=>{redirect('/index.html')});
-}, 500);
+}, 100);

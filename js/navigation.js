@@ -3,7 +3,7 @@ function insertHeaderNav(parentElement) {
     let navbar = `
             <div id="navbar">
                 <ul>
-                    <li>Dashboard</li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
                     <li><button class="btn btn-secondary" onclick="logout()" >Logout</button></li>
                 </ul>
             </div>
