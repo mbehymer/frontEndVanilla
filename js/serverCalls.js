@@ -154,3 +154,30 @@ async function updateCharacter(character, onSuccess=()=>{}, onFailure=()=>{}) {
     }
 
 }
+
+async function createCharacter(character, onSuccess=()=>{}, onFailure=()=>{}) {
+    // let refreshToken = await grabRefreshToken();
+    try {
+        const response = await fetch(BASE_URL() + 'characters', {
+            method: 'POST',
+            headers: { 
+                'authorization': `Bearer ${accessToken.accessToken}`,
+                'Content-Type': 'application/json' 
+            },
+            credentials: 'include',
+            body: JSON.stringify(character)
+            
+        });
+        if (!response.ok) {
+            onFailure();
+        } else {            
+            console.log(response);
+            let character = await response.json();
+            console.log(character);
+            onSuccess(character);
+        }
+    } catch (err) {
+        console.log(err.stack);
+    }
+
+}

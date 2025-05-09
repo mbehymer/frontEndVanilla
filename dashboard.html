@@ -10,7 +10,7 @@
         <script type="text/javascript" src="js/serverCalls.js"></script>
         <script type="text/javascript" src="js/popUp-utilities.js"></script>
         <script type="text/javascript" src="js/navigation.js"></script>
-        <script type="text/javascript" src="js/dashboard.js"></script>
+        <script type="text/javascript" src="js/dashboard.js" defer></script>
     </head>
     <body>
         <main id="dashboard-main">
@@ -21,7 +21,37 @@
             <div id="characters-container">
                 <p>No data has been requested</p>
             </div>
-        
+            <div id="character-form">
+                <div>
+                    <label for="character-name">Name</label>
+                    <input id="character-name" type="text">
+                </div>
+                <div>
+                    <label for="character-level">level</label>
+                    <input id="character-level" type="text">
+                </div>
+                <div>
+                    <label for="character-power">power</label>
+                    <input id="character-power" type="text">
+                </div>
+                <div>
+                    <label for="character-health">health</label>
+                    <input id="character-health" type="text">
+                </div>
+                <div>
+                    <label for="character-weapon-name">name</label>
+                    <input id="character-weapon-name" type="text">
+                </div>
+                <div>
+                    <label for="character-weapon-damage">damage</label>
+                    <input id="character-weapon-damage" type="text">
+                </div>
+                <button onclick="createNewCharacter()" class="btn btn-primary">Create Character</button>
+            </div>
+            <div id="character-import">
+                <h3>Import Character</h3>
+                <input type="file" id="character-import-file">
+            </div>
         </main>
     </body>
 </html>
