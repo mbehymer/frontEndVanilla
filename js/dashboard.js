@@ -156,32 +156,27 @@ function createNewCharacter() {
     createCharacter(char, (character)=> {console.log('character',character)}, ()=>{quickMessage('Failed to create character', {time: 5000, enabled: true})})
 }
         
-function importCharacter(event) {
-    const file = event.target.files[0];
 
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const fileContent = e.target.result;
-            const container=document.querySelector('#character-import');
-            if (container.querySelector('textarea')) {
-                container.removeChild(container.$('textarea'));
-            }
-            const textArea = document.createElement('textarea');
-            textArea.value = fileContent;
-            container.appendChild(textArea);
-            // Process the file content here
-        };
-
-        reader.onerror = (e) => {
-            console.error("File could not be read! Code " + e.target.error.code);
-        };
-        reader.readAsText(file); // Use readAsText for text files
-    }
+async function importCharacter() {
+    const inputFile = document.querySelector('#character-import-file');
+    file = await readFile(inputFile.files[0]);
+    
+    const textArea = document.createElement('textarea');
+    Object.assign(textArea.style, {
+        'width': '100%',
+        'min-height': '400px',
+        'margin': '1rem 0'
+    });
+    textArea.value = file;
+    // Process the file content here
+    openModal({
+        onOkay: ()=>{}, 
+        bodyHtml: textArea, 
+        headerName: 'Imported File Contents'
+    }) 
+    
 }
 
-const characterFile=document.querySelector('#character-import-file');
-characterFile.addEventListener('change', (event) => {  importCharacter(event) })
 
 // =================== On Load Run Code Below ====================
 

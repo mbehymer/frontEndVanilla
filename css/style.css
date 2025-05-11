@@ -139,11 +139,15 @@ header {
 
 /****** Modal Styles *******/
 
+body:has(.modal-backdrop) {
+    overflow:hidden;
+}
+
 .modal-backdrop {
-    position: absolute;
+    position: fixed;
     top: 0;
     background-color: #00000055;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
 }
 

@@ -10,7 +10,8 @@
         <script type="text/javascript" src="js/serverCalls.js"></script>
         <script type="text/javascript" src="js/popUp-utilities.js"></script>
         <script type="text/javascript" src="js/navigation.js"></script>
-        <script type="text/javascript" src="js/dashboard.js" defer></script>
+        <script type="text/javascript" src="js/fileReader.js"></script>
+        <script type="text/javascript" src="js/dashboard.js"></script>
     </head>
     <body>
         <main id="dashboard-main">
@@ -51,6 +52,7 @@
             <div id="character-import">
                 <h3>Import Character</h3>
                 <input type="file" id="character-import-file">
+                <button class="btn btn-primary" onclick="importCharacter()">Import File</button>
             </div>
         </main>
     </body>

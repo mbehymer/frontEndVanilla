@@ -36,7 +36,8 @@ function openModal(settings={onOkay: ()=>{}, bodyHtml: '', headerName: ''}) {
         <div class='modal-footer'><button class='btn btn-primary modal-btn-ok'>OK</button><button class='btn btn-cancel modal-btn-cancel'>Close</div>
     `;
     
-    modalContainer.querySelector('.modal-body').replaceChildren(...settings.bodyHtml.children);
+    modalContainer.querySelector('.modal-body').appendChild(settings.bodyHtml);
+    // modalContainer.querySelector('.modal-body').replaceChildren(...settings.bodyHtml/*.children*/);
     modalContainer.querySelector('.modal-btn-cancel').addEventListener('click', ()=>{ modalBackdrop.remove() });
     modalContainer.querySelector('.modal-btn-ok').addEventListener('click', ()=>{ 
         settings.onOkay();
