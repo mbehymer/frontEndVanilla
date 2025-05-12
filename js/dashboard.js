@@ -170,9 +170,29 @@ async function importCharacter() {
     textArea.value = file;
     // Process the file content here
     openModal({
-        onOkay: ()=>{}, 
+        onOkay: ()=>{
+            try {
+                let characterImport = JSON.parse(textArea.value);
+                console.log('import data', characterImport);
+
+                if (Array.isArray(characterImport)) {
+                    characterImport.forEach(character => {
+                        createCharacter(character, (res)=> {
+                            console.log('success', res);
+                        });
+                    })
+                }
+
+
+
+
+            } catch (err) {
+                console.error('Issue Importing: ', err);
+                quickMessage('Invalid Data', {time: 0, enabled: false});
+            }
+        }, 
         bodyHtml: textArea, 
-        headerName: 'Imported File Contents'
+        headerName: 'Confirm Import File Contents'
     }) 
     
 }
