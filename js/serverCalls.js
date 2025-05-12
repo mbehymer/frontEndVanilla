@@ -165,7 +165,7 @@ async function createCharacter(character, onSuccess=()=>{}, onFailure=()=>{}) {
                 'Content-Type': 'application/json' 
             },
             credentials: 'include',
-            body: JSON.stringify(character)
+            body: JSON.stringify({character})
             
         });
         if (!response.ok) {
