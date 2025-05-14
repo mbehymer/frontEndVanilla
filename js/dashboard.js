@@ -2,7 +2,7 @@ let dataStore = {};
 
 function processGettingCharacters() {
     updateCharactersButton();
-    getCharacters((characters)=>{
+    API.getCharacters((characters)=>{
         dataStore.characters = characters;
         loadCharacters(characters)
     });
@@ -35,7 +35,7 @@ function createCharacterElement(character) {
         openModal(
             {
                 onOkay: ()=>{
-                    updateCharacter(getCharacter(character.id), processGettingCharacters);
+                    API.updateCharacter(getCharacter(character.id), processGettingCharacters);
                 }, 
                 bodyHtml: modalBody, 
                 headerName: character.name
@@ -153,7 +153,7 @@ function createNewCharacter() {
         } else { char[el[0]]=el[1] }
     });
     console.log(char);
-    createCharacter(char, (character)=> {console.log('character',character)}, ()=>{quickMessage('Failed to create character', {time: 5000, enabled: true})})
+    API.createCharacter(char, (character)=> {console.log('character',character)}, ()=>{quickMessage('Failed to create character', {time: 5000, enabled: true})})
 }
         
 
@@ -177,7 +177,7 @@ async function importCharacter() {
 
                 if (Array.isArray(characterImport)) {
                     characterImport.forEach(character => {
-                        createCharacter(character, (res)=> {
+                        API.createCharacter(character, (res)=> {
                             console.log('success', res);
                         });
                     })
@@ -202,5 +202,5 @@ async function importCharacter() {
 
 // Get the refresh token, and if the user isn't authorized send them ot the login page. Otherwise show the header navigation
 setTimeout(() => {
-    grabRefreshToken(()=>{insertHeaderNav('body')}, ()=>{redirect('/index.html')});
+    API.grabRefreshToken(()=>{insertHeaderNav('body')}, ()=>{redirect('/index.html')});
 }, 100);

@@ -4,7 +4,7 @@ function insertHeaderNav(parentElement) {
             <div id="navbar">
                 <ul>
                     <li><a href="dashboard.html">Dashboard</a></li>
-                    <li><button class="btn btn-secondary" onclick="logout()" >Logout</button></li>
+                    <li><button class="btn btn-secondary" onclick="API.logout()" >Logout</button></li>
                 </ul>
             </div>
         `;

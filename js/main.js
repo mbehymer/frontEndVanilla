@@ -2,7 +2,7 @@ async function login() {
     // authenticate(() => {
     //     redirect('/dashboard.html');
     // });
-    let response = await authenticate();
+    let response = await API.authenticate();
     if (response.ok) { redirect('/dashboard.html'); }
     else { quickMessage("LOGIN UNSUCCESSFUL", timer={time:5000, enabled:true}) }
 }
