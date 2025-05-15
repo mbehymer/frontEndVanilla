@@ -22,11 +22,11 @@ class ServerConnection {
         return {
             'GET': this._reqForGET(),
             'POST': this._reqForPOST(),
-            'PUSH': this._reqForPUSH(),
+            'PUT': this._reqForPUT(),
             'DELETE': this._reqForDELETE(),
             'GET-auth': this._reqForGET(true),
             'POST-auth': this._reqForPOST(true),
-            'PUSH-auth': this._reqForPUSH(true),
+            'PUT-auth': this._reqForPUT(true),
             'DELETE-auth': this._reqForDELETE(true)
         }[req];
     }
@@ -50,11 +50,15 @@ class ServerConnection {
             headers: { 'Content-Type': 'application/json' } 
         }
     } 
-    _reqForPUSH = (auth)=> { 
+    _reqForPUT = (auth)=> { 
         return auth ? { 
-            method: 'PUSH' 
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            credentials: 'include',
         } : {
-
+            method: 'PUT',
         } 
     }
     _reqForDELETE = (auth)=> { 
@@ -65,7 +69,39 @@ class ServerConnection {
         } 
     }
 
-    _combine = (...objs) => Object.assign(...objs);
+    _combine = (...objs) => {
+        let currentObj = {};
+        objs.forEach(obj => {
+            // Take the currentObj and combine it with obj
+            Object.entries(obj).forEach(([key,value]) => {
+                if (currentObj[key] === null || currentObj[key] === undefined) {
+                    currentObj[key] = value;
+                } else if (typeof value !== 'object') {
+                    if (typeof currentObj[key] !== 'object') {
+                        // If the value isn't an object and the same key in your currentObj isn't an object, add it to the currentObj
+                        currentObj[key] = value; // This will overwrite anything that isn't an object in currentObj at the given key
+                    } else if (Array.isArray(currentObj[key])) {
+                        currentObj[key] = [...currentObj, value]; // add the value into the currentObj[key] if the latter is an array
+                    } else {
+                        console.error('Cannot Merge', currentObj[key], 'with', value, 'because one is an object and the other is a', typeof value);
+                    }
+                } else if (Array.isArray(value)) {
+                    // If the value is an array which is a type of object...
+                    if (typeof currentObj[key] !== 'object') { 
+                        currentObj[key] = [currentObj[key], ...value];
+                    } else {
+                        if (!Array.isArray(currentObj[key])) { 
+                            console.warn('The object', structuredClone(currentObj[key]),'was merged with the array', structuredClone(value)); 
+                        }
+                        currentObj[key] = Object.assign(currentObj, value);
+                    }
+                } else { // the value is an object
+                    currentObj[key] = this._combine(currentObj[key], value);
+                }
+            })
+        });
+        return currentObj;
+    };
 
     authenticate = async function() {
         const userField = document.querySelector("#username");
@@ -96,11 +132,7 @@ class ServerConnection {
     grabRefreshToken = async function(onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken;
         try {
-            const response = await fetch(BASE_URL() + 'refresh', {
-                method: 'GET',
-                withCredentials: true,
-                credentials: 'include'
-            });
+            const response = await fetch(BASE_URL() + 'refresh', this.setReqParams('GET-auth'));
             console.log(response);
             if (!response.ok) {
                 onFailure();
@@ -116,12 +148,9 @@ class ServerConnection {
     register = async function(info={user: false, pwd: false},onSuccess=()=>{}, onFailure=()=>{}) {
         if (!info.user || !info.pwd) return false;
         try {
-            const response = await fetch(BASE_URL() + 'register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ user: info.user, pwd: info.pwd })
-            });
+            const response = await fetch(BASE_URL() + 'register', 
+                this._combine(this.setReqParams('POST-auth'), { body: JSON.stringify({ user: info.user, pwd: info.pwd })})
+            );
             if (!response.ok) {
                 onFailure();
             } else {
@@ -135,11 +164,7 @@ class ServerConnection {
     logout = async function (onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken;
         try {
-            const response = await fetch(BASE_URL() + 'logout', {
-                method: 'GET',
-                withCredentials: true,
-                credentials: 'include'
-            });
+            const response = await fetch(BASE_URL() + 'logout', this.setReqParams('GET-auth'));
             console.log(response);
             if (!response.ok) {
                 onFailure();
@@ -157,13 +182,9 @@ class ServerConnection {
     getCharacters = async function (onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken = await grabRefreshToken();
         try {
-            const response = await fetch(BASE_URL() + 'characters', {
-                method: 'GET',
-                headers: { 'authorization': `Bearer ${accessToken.accessToken}` },
-                credentials: 'include',
-                
-                // body: JSON.stringify({ user, pwd })
-            });
+            const response = await fetch(BASE_URL() + 'characters', 
+                this._combine(this.setReqParams('GET-auth'), {headers: { 'authorization': `Bearer ${accessToken.accessToken}` }})
+            );
             if (!response.ok) {
                 onFailure();
             } else {            
@@ -180,17 +201,12 @@ class ServerConnection {
     updateCharacter = async function (character, onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken = await grabRefreshToken();
         try {
-            const response = await fetch(BASE_URL() + 'characters', {
-                method: 'PUT',
-                headers: { 
-                    'authorization': `Bearer ${accessToken.accessToken}`,
-                    'Content-Type': 'application/json' 
-                },
-                credentials: 'include',
-                body: JSON.stringify({character})
-                
-                // body: JSON.stringify({ user, pwd })
-            });
+            const response = await fetch(BASE_URL() + 'characters', 
+                this._combine(this.setReqParams('POST-auth'), 
+                    { headers: { 'authorization': `Bearer ${accessToken.accessToken}`},
+                    body: JSON.stringify({character})}
+                )
+            );
             if (!response.ok) {
                 onFailure();
             } else {            
@@ -208,16 +224,13 @@ class ServerConnection {
     createCharacter = async function (character, onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken = await grabRefreshToken();
         try {
-            const response = await fetch(BASE_URL() + 'characters', {
-                method: 'POST',
-                headers: { 
-                    'authorization': `Bearer ${accessToken.accessToken}`,
-                    'Content-Type': 'application/json' 
-                },
-                credentials: 'include',
+            const header = this._combine(this.setReqParams('POST-auth'),
+            {   headers: { 'authorization': `Bearer ${accessToken.accessToken}`},
                 body: JSON.stringify({character})
-                
-            });
+            }
+        );
+        console.log('HEADER',header);
+            const response = await fetch(BASE_URL() + 'characters', header);
             if (!response.ok) {
                 onFailure();
             } else {            
