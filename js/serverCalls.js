@@ -202,7 +202,7 @@ class ServerConnection {
         // let refreshToken = await grabRefreshToken();
         try {
             const response = await fetch(BASE_URL() + 'characters', 
-                this._combine(this.setReqParams('POST-auth'), 
+                this._combine(this.setReqParams('PUT-auth'), 
                     { headers: { 'authorization': `Bearer ${accessToken.accessToken}`},
                     body: JSON.stringify({character})}
                 )
