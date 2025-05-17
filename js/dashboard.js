@@ -2,10 +2,15 @@ let dataStore = {};
 
 function processGettingCharacters() {
     updateCharactersButton();
-    API.getCharacters((characters)=>{
-        dataStore.characters = characters;
-        loadCharacters(characters)
-    });
+    const response = API.getCharacters()
+    if (response.ok) {
+        response.json().then((characters)=>{
+            dataStore.characters = characters;
+            loadCharacters(characters)
+        });
+    } else {
+        quickMessage(response.msg, {time: 5000, enabled: true})
+    }
 }
 
 function createCharacterElement(character) {
@@ -35,14 +40,23 @@ function createCharacterElement(character) {
         openModal(
             {
                 onOkay: ()=>{
-                    API.updateCharacter(getCharacter(character.id), processGettingCharacters);
+                    // TODO: Move authorization to the API. Possible solution - have all functions run through a initial function like API.run('nameOfAPIFunction', parameters)
+                    
+                    if (['A','E'].includes(API.settings.role)) {
+                        const response = API.updateCharacter(getCharacter(character.id));
+                        if (response.ok) {
+                            processGettingCharacters();
+                        } else {
+                            quickMessage(response.msg, {time: 5000, enabled: true})
+                        }
+                    }
                 }, 
                 bodyHtml: modalBody, 
                 headerName: character.name
             })
     });
 
-    editBtn.innerText = 'Edit';
+    editBtn.innerText = 'View';
     editBtn.classList.add('btn', 'btn-primary');
     name.innerHTML = character.name;
     containerDetails.unshift(name);
@@ -53,7 +67,7 @@ function createCharacterElement(character) {
     
 }
 
-function sortCharacters() {
+function sortCharacters() { // TODO: Finish this
 
 }
 
@@ -90,17 +104,23 @@ function createEditCharacterModal(character) {
         if (typeof value !== 'object') {
             const id = label + '-' + crypto.randomUUID();
             let valueType = typeof value === 'number' ? 'number' : 'text';
-            field.innerHTML = `
-                <label for='${id}'>${label}: </label>
-                <input id='${id}' type='${valueType}' value='${value}'>
-            `;
-            let input = field.querySelector('#'+id);
-            input.addEventListener('change', (e)=>{
-                let index = dataStore.characters.findIndex(char => char.id === character.id)
-                let newValue = input.type === 'number' ? Number(input.value) : String(input.value) 
-                dataStore.characters[index] = updateField(newPath, character, newValue);
-                console.log(dataStore.characters[index]);
-            });
+            if (['A','E'].includes(API.settings.role)) {
+                field.innerHTML = `
+                    <label for='${id}'>${label}: </label>
+                    <input id='${id}' type='${valueType}' value='${value}'>
+                `;
+                let input = field.querySelector('#'+id);
+                input.addEventListener('change', (e)=>{
+                    let index = dataStore.characters.findIndex(char => char.id === character.id)
+                    let newValue = input.type === 'number' ? Number(input.value) : String(input.value) 
+                    dataStore.characters[index] = updateField(newPath, character, newValue);
+                    console.log(dataStore.characters[index]);
+                });
+            } else {
+                field.innerHTML = `
+                    <p>${label}: ${value}</p>
+                `;
+            }
         } else {
 
             field.innerHTML = `<p>${label}: </p>`;
@@ -153,7 +173,13 @@ function createNewCharacter() {
         } else { char[el[0]]=el[1] }
     });
     console.log(char);
-    API.createCharacter(char, (character)=> {console.log('character',character)}, ()=>{quickMessage('Failed to create character', {time: 5000, enabled: true})})
+    const response = API.createCharacter(char)
+    if (response.ok) {
+        response.json().then((character)=> {console.log('character',character)});
+    } else { 
+        quickMessage(response.msg, {time: 5000, enabled: true});
+    }
+    
 }
         
 
@@ -177,9 +203,14 @@ async function importCharacter() {
 
                 if (Array.isArray(characterImport)) {
                     characterImport.forEach(character => {
-                        API.createCharacter(character, (res)=> {
-                            console.log('success', res);
-                        });
+                        let response = API.createCharacter(character);
+                        if (response.ok) {
+                            response.json().then((res)=> {
+                                console.log('success', res);
+                            });
+                        } else {
+                            quickMessage(response.msg, {time: 5000, enabled: true});
+                        }
                     })
                 }
 
@@ -202,5 +233,11 @@ async function importCharacter() {
 
 // Get the refresh token, and if the user isn't authorized send them ot the login page. Otherwise show the header navigation
 setTimeout(() => {
-    API.grabRefreshToken(()=>{insertHeaderNav('body')}, ()=>{redirect('/index.html')});
+    let response = API.grabRefreshToken();
+    if (response.ok) {
+        insertHeaderNav('body')
+    } else {
+        redirect('/index.html')
+        quickMessage(response.msg, {time: 5000, enabled: true});
+    }
 }, 100);
