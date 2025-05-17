@@ -15,8 +15,12 @@ function delay(ms) {
 }
 
 class ServerConnection {
-    
+    // constructor(name = "", level = 1, power = 1, health = 1, weapon = {}) {
+    //     this.settings
+    // }
     // accessToken;
+
+    settings = {};
     
     setReqParams = function(req) {
         return {
@@ -118,129 +122,170 @@ class ServerConnection {
             const response = await fetch(BASE_URL() + 'auth', 
                 this._combine(this.setReqParams('POST-auth'), { body: JSON.stringify({ user, pwd })})
             );
-
-            accessToken = response.ok ? response.json() : false;
+            
+            const data = response.ok ? await response.json() : false;
+            this.settings.role = data.role;
+            accessToken = data.accessToken;
             loader.end();
+            console.log('accessToken',accessToken);
+            console.log('response',response);
             return response;
         } catch (err) {
             console.log(err.stack);
             loader.end();
-            return false
+            return {ok: false, msg: err.stack}
         }
     }
 
     grabRefreshToken = async function(onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken;
+        loader.start();
         try {
             const response = await fetch(BASE_URL() + 'refresh', this.setReqParams('GET-auth'));
-            console.log(response);
-            if (!response.ok) {
-                onFailure();
-            } else {           
-                accessToken = await response.json();
-                onSuccess();
-            }
+            
+            const data = response.ok ? await response.json() : false;
+            this.settings.role=data.role;
+            accessToken = data.accessToken;
+            
+            loader.end();
+            return response;
         } catch (err) {
+            loader.end();
             console.log(err.stack);
+            return {ok: false, msg: err.stack}
         }
     }
 
     register = async function(info={user: false, pwd: false},onSuccess=()=>{}, onFailure=()=>{}) {
         if (!info.user || !info.pwd) return false;
+        loader.start();
         try {
             const response = await fetch(BASE_URL() + 'register', 
                 this._combine(this.setReqParams('POST-auth'), { body: JSON.stringify({ user: info.user, pwd: info.pwd })})
             );
-            if (!response.ok) {
-                onFailure();
-            } else {
-                accessToken = await response.json();
-                onSuccess();
-            }
+            accessToken = await response.json();
+            loader.end();
+            return response;
+            // if (!response.ok) {
+            //     onFailure();
+            // } else {
+                // accessToken = await response.json();
+            //     onSuccess();
+            // }
         } catch (err) {
+            loader.end();
             console.log(err.stack);
+            return {ok: false, msg: err.stack}
         }
     }
+
     logout = async function (onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken;
+        loader.start();
         try {
             const response = await fetch(BASE_URL() + 'logout', this.setReqParams('GET-auth'));
-            console.log(response);
-            if (!response.ok) {
-                onFailure();
-            } else {         
-                redirect('/index.html');
-                onSuccess();
-            }
+            loader.end();
+            return response;
+            // if (!response.ok) {
+            //     onFailure();
+            // } else {         
+            //     redirect('/index.html');
+            //     onSuccess();
+            // }
         } catch (err) {
+            loader.end();
             console.log(err.stack);
+            return {ok: false, msg: err.stack}
             // redirect('/index.html');
         }
     }
 
-
     getCharacters = async function (onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken = await grabRefreshToken();
+        loader.start();
         try {
+            console.log('Request',this._combine(this.setReqParams('GET-auth'), {headers: { 'authorization': `Bearer ${accessToken}` }}))
             const response = await fetch(BASE_URL() + 'characters', 
-                this._combine(this.setReqParams('GET-auth'), {headers: { 'authorization': `Bearer ${accessToken.accessToken}` }})
+                this._combine(this.setReqParams('GET-auth'), {headers: { 'authorization': `Bearer ${accessToken}` }})
             );
-            if (!response.ok) {
-                onFailure();
-            } else {            
-                console.log(response);
-                let characters = await response.json();
-                console.log(characters);
-                onSuccess(characters);
-            }
+            loader.end();
+            return response;
+            // if (!response.ok) {
+            //     return response.ok;
+            //     onFailure();
+            // } else {
+            //     return await response.json();            
+                // console.log(response);
+                // let characters = await response.json();
+                // console.log(characters);
+                // onSuccess(characters);
+            // }
         } catch (err) {
+            loader.end();
             console.log(err.stack);
+            return {ok: false, msg: err.stack}
         }
 
     }
+
     updateCharacter = async function (character, onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken = await grabRefreshToken();
+        loader.start();
+        if (!['A','E'].includes(settings.role)) return { ok: false, msg: 'You are not allowed to Update'};
         try {
             const response = await fetch(BASE_URL() + 'characters', 
                 this._combine(this.setReqParams('PUT-auth'), 
-                    { headers: { 'authorization': `Bearer ${accessToken.accessToken}`},
+                    { headers: { 'authorization': `Bearer ${accessToken}`},
                     body: JSON.stringify({character})}
                 )
             );
-            if (!response.ok) {
-                onFailure();
-            } else {            
-                console.log(response);
-                let characters = await response.json();
-                console.log(characters);
-                onSuccess(characters);
-            }
+            loader.end();
+            return response;
+            // if (!response.ok) {
+            //     return response.ok;
+            //     onFailure();
+            // } else {
+            //     return await response.json();  
+            //     console.log(response);
+            //     let characters = await response.json();
+            //     console.log(characters);
+            //     onSuccess(characters);
+            // }
         } catch (err) {
+            loader.end();
             console.log(err.stack);
+            return {ok: false, msg: err.stack}
         }
 
     }
 
     createCharacter = async function (character, onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken = await grabRefreshToken();
+        loader.start();
+        if (!['A','E'].includes(settings.role)) return { ok: false, msg: 'You are not allowed to Create'};
         try {
             const header = this._combine(this.setReqParams('POST-auth'),
-            {   headers: { 'authorization': `Bearer ${accessToken.accessToken}`},
-                body: JSON.stringify({character})
-            }
-        );
-        console.log('HEADER',header);
+                {   headers: { 'authorization': `Bearer ${accessToken}`},
+                    body: JSON.stringify({character})
+                }
+            );
             const response = await fetch(BASE_URL() + 'characters', header);
-            if (!response.ok) {
-                onFailure();
-            } else {            
-                console.log(response);
-                let character = await response.json();
-                console.log(character);
-                onSuccess(character);
-            }
+            loader.end();
+            return response;
+            // if (!response.ok) {
+            //     return response.ok;
+            //     onFailure();
+            // } else {
+            //     return await response.json();  
+            //     console.log(response);
+            //     let character = await response.json();
+            //     console.log(character);
+            //     onSuccess(character);
+            // }
         } catch (err) {
+            loader.end();
             console.log(err.stack);
+            return {ok: false, msg: err.stack}
         }
 
     }
