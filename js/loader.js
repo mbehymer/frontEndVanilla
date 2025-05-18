@@ -2,12 +2,13 @@ let loader = {
 
     start: function() {
         let body = document.querySelector('body');
-        let loadContainer = document.querySelector('div');
+        let loadContainer = document.createElement('div');
         loadContainer.innerHTML = `
         <div class="spinner">
         </div>
         `;
         loadContainer.classList.add('load-container');
+        body.appendChild(loadContainer);
         return loadContainer;
     },
     end: function() {

@@ -51,12 +51,13 @@ function transitionToLogin() {
 }
 
 setTimeout(() => {
-    let response = API.grabRefreshToken();
-    if (response.ok) {
-        insertHeaderNav('body')
-    } else {
-        redirect('/index.html')
-        quickMessage(response.msg, {time: 5000, enabled: true});
-    }
-},
- "500");
+    API.grabRefreshToken().then(response => {
+        if (response.ok) {
+            insertHeaderNav('body')
+        } else {
+            redirect('/index.html')
+            quickMessage(response.msg, {time: 5000, enabled: true});
+        }
+    });
+}
+, 0);
