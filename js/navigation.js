@@ -1,19 +1,24 @@
 function insertHeaderNav(parentElement) {
     let parent = document.querySelector(parentElement);
-    let navbar = `
-            <div id="navbar">
+    let navbar = document.createElement('div');
+    navbar.id='navbar';
+    navbar.innerHTML =`
                 <ul>
                     <li><a href="dashboard.html">Dashboard</a></li>
-                    <li><button class="btn btn-secondary" onclick="API.logout()" >Logout</button></li>
+                    <li><button class="btn btn-secondary logout-btn">Logout</button></li>
                 </ul>
-            </div>
         `;
-    let firstChild = parent.firstChild
+    
+    let firstChild = parent.firstElementChild
+    navbar.querySelector('.logout-btn').addEventListener('click', async () => {
+        await API.logout();
+        redirect('/index.html');
+    })
     if (firstChild.tagName === 'HEADER') {
-        firstChild.innerHTML = navbar;
+        firstChild.appendChild(navbar);
     } else {
     let header = document.createElement('header');
-        header.innerHTML = navbar;
+        header.appendChild(navbar);
         parent.insertBefore(header, firstChild);
     }
 };

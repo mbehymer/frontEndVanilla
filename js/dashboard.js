@@ -2,15 +2,16 @@ let dataStore = {};
 
 function processGettingCharacters() {
     updateCharactersButton();
-    const response = API.getCharacters()
-    if (response.ok) {
-        response.json().then((characters)=>{
-            dataStore.characters = characters;
-            loadCharacters(characters)
-        });
-    } else {
-        quickMessage(response.msg, {time: 5000, enabled: true})
-    }
+    API.getCharacters().then(response => {
+        if (response.ok) {
+            response.json().then((characters)=>{
+                dataStore.characters = characters;
+                loadCharacters(characters)
+            });
+        } else {
+            quickMessage(response.msg, {time: 5000, enabled: true})
+        }
+    });
 }
 
 function createCharacterElement(character) {
@@ -43,12 +44,13 @@ function createCharacterElement(character) {
                     // TODO: Move authorization to the API. Possible solution - have all functions run through a initial function like API.run('nameOfAPIFunction', parameters)
                     
                     if (['A','E'].includes(API.settings.role)) {
-                        const response = API.updateCharacter(getCharacter(character.id));
-                        if (response.ok) {
-                            processGettingCharacters();
-                        } else {
-                            quickMessage(response.msg, {time: 5000, enabled: true})
-                        }
+                        API.updateCharacter(getCharacter(character.id)).then(response => {
+                            if (response.ok) {
+                                processGettingCharacters();
+                            } else {
+                                quickMessage(response.msg, {time: 5000, enabled: true})
+                            }
+                        });
                     }
                 }, 
                 bodyHtml: modalBody, 
@@ -173,12 +175,13 @@ function createNewCharacter() {
         } else { char[el[0]]=el[1] }
     });
     console.log(char);
-    const response = API.createCharacter(char)
-    if (response.ok) {
-        response.json().then((character)=> {console.log('character',character)});
-    } else { 
-        quickMessage(response.msg, {time: 5000, enabled: true});
-    }
+    API.createCharacter(char).then(resposne => {
+        if (response.ok) {
+            response.json().then((character)=> {console.log('character',character)});
+        } else { 
+            quickMessage(response.msg, {time: 5000, enabled: true});
+        }
+    });
     
 }
         
@@ -203,14 +206,15 @@ async function importCharacter() {
 
                 if (Array.isArray(characterImport)) {
                     characterImport.forEach(character => {
-                        let response = API.createCharacter(character);
-                        if (response.ok) {
-                            response.json().then((res)=> {
-                                console.log('success', res);
-                            });
-                        } else {
-                            quickMessage(response.msg, {time: 5000, enabled: true});
-                        }
+                        API.createCharacter(character).then(response => {
+                            if (response.ok) {
+                                response.json().then((res)=> {
+                                    console.log('success', res);
+                                });
+                            } else {
+                                quickMessage(response.msg, {time: 5000, enabled: true});
+                            }
+                        });
                     })
                 }
 
@@ -233,11 +237,13 @@ async function importCharacter() {
 
 // Get the refresh token, and if the user isn't authorized send them ot the login page. Otherwise show the header navigation
 setTimeout(() => {
-    let response = API.grabRefreshToken();
-    if (response.ok) {
-        insertHeaderNav('body')
-    } else {
-        redirect('/index.html')
-        quickMessage(response.msg, {time: 5000, enabled: true});
+        API.grabRefreshToken().then(response => {
+            if (response.ok) {
+                insertHeaderNav('body')
+            } else {
+                redirect('/index.html')
+                quickMessage(response.msg, {time: 5000, enabled: true});
+            }
+        });
     }
-}, 100);
+, 0);
