@@ -7,12 +7,12 @@ let loader = {
         <div class="spinner">
         </div>
         `;
-        loadContainer.classList.add('load-container');
+        loadContainer.classList.add('spinner-container');
         body.appendChild(loadContainer);
         return loadContainer;
     },
     end: function() {
-        return document.querySelector('.load-container').remove();
+        return document.querySelector('.spinner-container').remove();
     }
 }
 

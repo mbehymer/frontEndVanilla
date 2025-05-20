@@ -200,6 +200,34 @@ class ServerConnection {
         }
     }
 
+    getCharacter = async function (id) {
+        // let refreshToken = await grabRefreshToken();
+        loader.start();
+        try {
+            console.log('Request',this._combine(this.setReqParams('GET-auth'), {headers: { 'authorization': `Bearer ${accessToken}` }}))
+            const response = await fetch(BASE_URL() + 'characters/' + id, 
+                this._combine(this.setReqParams('GET-auth'), {headers: { 'authorization': `Bearer ${accessToken}` }})
+            );
+            loader.end();
+            return response;
+            // if (!response.ok) {
+            //     return response.ok;
+            //     onFailure();
+            // } else {
+            //     return await response.json();            
+                // console.log(response);
+                // let characters = await response.json();
+                // console.log(characters);
+                // onSuccess(characters);
+            // }
+        } catch (err) {
+            loader.end();
+            console.log(err.stack);
+            return {ok: false, msg: err.stack}
+        }
+
+    }
+
     getCharacters = async function (onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken = await grabRefreshToken();
         loader.start();
@@ -282,6 +310,27 @@ class ServerConnection {
             //     console.log(character);
             //     onSuccess(character);
             // }
+        } catch (err) {
+            loader.end();
+            console.log(err.stack);
+            return {ok: false, msg: err.stack}
+        }
+
+    }
+    
+    deleteCharacter = async function (id) {
+        // let refreshToken = await grabRefreshToken();
+        loader.start();
+        if (!['A'].includes(this.settings.role)) return { ok: false, msg: 'You are not allowed to Delete'};
+        try {
+            const header = this._combine(this.setReqParams('DELETE-auth'),
+                {   headers: { 'authorization': `Bearer ${accessToken}`},
+                    body: JSON.stringify({character})
+                }
+            );
+            const response = await fetch(BASE_URL() + 'characters/'+id, header);
+            loader.end();
+            return response;
         } catch (err) {
             loader.end();
             console.log(err.stack);
