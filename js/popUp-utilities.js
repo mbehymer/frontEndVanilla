@@ -24,7 +24,7 @@ function quickMessage(message, timer={time:5000, enabled:true}) {
     }
 };
 
-function openModal(settings={onOkay: ()=>{}, bodyHtml: '', headerName: ''}) {
+function openModal(settings={ bodyHtml: '', headerName: '', footerSettings: { buttons: [{ label: 'Ok', action: ()=>{}, canClose: true, classes: ['btn', 'btn-primary'], includeIf: true},{ label: 'Close', action: ()=>{}, canClose: true, classes: ['btn', 'btn-secondary'], includeIf: true}]}}) {
     let body = document.querySelector('body');
     let modalBackdrop = document.createElement('div');
     modalBackdrop.classList.add('modal-backdrop');
@@ -33,19 +33,36 @@ function openModal(settings={onOkay: ()=>{}, bodyHtml: '', headerName: ''}) {
     modalContainer.innerHTML =  `
         <div class='modal-header'><h2>${settings.headerName}</h2></div>
         <div class='modal-body'></div>
-        <div class='modal-footer'><button class='btn btn-primary modal-btn-ok'>OK</button><button class='btn btn-cancel modal-btn-cancel'>Close</div>
+        <div class='modal-footer'></div>
     `;
     
+    let footer = modalContainer.querySelector('.modal-footer');
+
+    settings.footerSettings.buttons
+    .filter(button => button.includeIf) // Verify if the button should be visible. For example, maybe it should only show if someone has the right authorization
+    .forEach(button => {
+        let btnElement = document.createElement('button');
+        btnElement.classList.add(...button.classes);
+        btnElement.innerText = button.label;
+        btnElement.addEventListener('click', (e)=> {
+            button.action();
+            if (button.canClose) modalBackdrop.remove();
+            console.log('This is still running');
+
+        });
+        footer.appendChild(btnElement);
+    });
+
     modalContainer.querySelector('.modal-body').appendChild(settings.bodyHtml);
-    // modalContainer.querySelector('.modal-body').replaceChildren(...settings.bodyHtml/*.children*/);
-    modalContainer.querySelector('.modal-btn-cancel').addEventListener('click', ()=>{ modalBackdrop.remove() });
-    modalContainer.querySelector('.modal-btn-ok').addEventListener('click', ()=>{ 
-        settings.onOkay();
-        modalBackdrop.remove();
-    }
-    );
-    
     modalBackdrop.appendChild(modalContainer);
     body.appendChild(modalBackdrop);
+    // modalContainer.querySelector('.modal-body').replaceChildren(...settings.bodyHtml/*.children*/);
+    // modalContainer.querySelector('.modal-btn-cancel').addEventListener('click', ()=>{ modalBackdrop.remove() });
+    // modalContainer.querySelector('.modal-btn-ok').addEventListener('click', ()=>{ 
+    //     settings.onOkay();
+    //     modalBackdrop.remove();
+    // }
+    // );
+    
     
 }
