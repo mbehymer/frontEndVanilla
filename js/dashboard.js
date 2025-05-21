@@ -40,21 +40,44 @@ function createCharacterElement(character) {
         // Show a pop up modal with the information about the character
         openModal(
             {
-                onOkay: ()=>{
-                    // TODO: Move authorization to the API. Possible solution - have all functions run through a initial function like API.run('nameOfAPIFunction', parameters)
-                    
-                    if (['A','E'].includes(API.settings.role)) {
-                        API.updateCharacter(getCharacter(character.id)).then(response => {
-                            if (response.ok) {
-                                processGettingCharacters();
-                            } else {
-                                quickMessage(response.msg, {time: 5000, enabled: true})
-                            }
-                        });
-                    }
-                }, 
                 bodyHtml: modalBody, 
-                headerName: character.name
+                headerName: character.name,
+                footerSettings: {
+                    buttons: [
+                        {
+                            label: 'Update',
+                            canClose: true,
+                            includeIf: ['A','E'].includes(API.settings.role),
+                            classes: ['btn', 'btn-primary'],
+                            action: () => {
+                                // TODO: Move authorization to the API. Possible solution - have all functions run through a initial function like API.run('nameOfAPIFunction', parameters)
+                                
+                                API.updateCharacter(getCharacter(character.id)).then(response => {
+                                    if (response.ok) {
+                                        processGettingCharacters();
+                                    } else {
+                                        quickMessage(response.msg, {time: 5000, enabled: true})
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            label: 'Delete',
+                            canClose: true,
+                            includeIf: ['A'].includes(API.settings.role),
+                            classes: ['btn', 'btn-danger'],
+                            action: () => {}
+                        },
+                        {
+                            label: 'Close',
+                            canClose: true,
+                            includeIf: true,
+                            classes: ['btn', 'btn-secondary'],
+                            action: () => {}
+                        }
+                        
+                    ]
+                }
             })
     });
 
@@ -175,7 +198,7 @@ function createNewCharacter() {
         } else { char[el[0]]=el[1] }
     });
     console.log(char);
-    API.createCharacter(char).then(resposne => {
+    API.createCharacter(char).then(response => {
         if (response.ok) {
             response.json().then((character)=> {console.log('character',character)});
         } else { 
@@ -199,35 +222,49 @@ async function importCharacter() {
     textArea.value = file;
     // Process the file content here
     openModal({
-        onOkay: ()=>{
-            try {
-                let characterImport = JSON.parse(textArea.value);
-                console.log('import data', characterImport);
-
-                if (Array.isArray(characterImport)) {
-                    characterImport.forEach(character => {
-                        API.createCharacter(character).then(response => {
-                            if (response.ok) {
-                                response.json().then((res)=> {
-                                    console.log('success', res);
-                                });
-                            } else {
-                                quickMessage(response.msg, {time: 5000, enabled: true});
-                            }
-                        });
-                    })
-                }
-
-
-
-
-            } catch (err) {
-                console.error('Issue Importing: ', err);
-                quickMessage('Invalid Data', {time: 0, enabled: false});
-            }
-        }, 
         bodyHtml: textArea, 
-        headerName: 'Confirm Import File Contents'
+        headerName: 'Confirm Import File Contents',
+        footerSettings: {
+            buttons: [
+                {
+                    label: 'Ok',
+                    canClose: true,
+                    includeIf: true,
+                    classes: ['btn', 'btn-primary'],
+                    action: () => {
+                        try {
+                            let characterImport = JSON.parse(textArea.value);
+                            console.log('import data', characterImport);
+            
+                            if (Array.isArray(characterImport)) {
+                                characterImport.forEach(character => {
+                                    API.createCharacter(character).then(response => {
+                                        if (response.ok) {
+                                            response.json().then((res)=> {
+                                                console.log('success', res);
+                                            });
+                                        } else {
+                                            quickMessage(response.msg, {time: 5000, enabled: true});
+                                        }
+                                    });
+                                })
+                            }
+                        } catch (err) {
+                            console.error('Issue Importing: ', err);
+                            quickMessage('Invalid Data', {time: 0, enabled: false});
+                        }
+                    }
+                },
+                {
+                    label: 'Close',
+                    canClose: true,
+                    includeIf: true,
+                    classes: ['btn', 'btn-secondary'],
+                    action: () => {}
+                }
+                
+            ]
+        }
     }) 
     
 }

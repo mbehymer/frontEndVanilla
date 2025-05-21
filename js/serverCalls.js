@@ -259,7 +259,10 @@ class ServerConnection {
     updateCharacter = async function (character, onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken = await grabRefreshToken();
         loader.start();
-        if (!['A','E'].includes(this.settings.role)) return { ok: false, msg: 'You are not allowed to Update'};
+        if (!['A','E'].includes(this.settings.role)) {
+            loader.end();
+            return { ok: false, msg: 'You are not allowed to Update'};
+        }
         try {
             const response = await fetch(BASE_URL() + 'characters', 
                 this._combine(this.setReqParams('PUT-auth'), 
@@ -290,7 +293,10 @@ class ServerConnection {
     createCharacter = async function (character, onSuccess=()=>{}, onFailure=()=>{}) {
         // let refreshToken = await grabRefreshToken();
         loader.start();
-        if (!['A','E'].includes(this.settings.role)) return { ok: false, msg: 'You are not allowed to Create'};
+        if (!['A','E'].includes(this.settings.role)) {
+            loader.end();
+            return { ok: false, msg: 'You are not allowed to Create'};
+        }
         try {
             const header = this._combine(this.setReqParams('POST-auth'),
                 {   headers: { 'authorization': `Bearer ${accessToken}`},
@@ -321,7 +327,10 @@ class ServerConnection {
     deleteCharacter = async function (id) {
         // let refreshToken = await grabRefreshToken();
         loader.start();
-        if (!['A'].includes(this.settings.role)) return { ok: false, msg: 'You are not allowed to Delete'};
+        if (!['A'].includes(this.settings.role)) {
+            loader.end();
+            return { ok: false, msg: 'You are not allowed to Delete'};
+        }
         try {
             const header = this._combine(this.setReqParams('DELETE-auth'),
                 {   headers: { 'authorization': `Bearer ${accessToken}`},

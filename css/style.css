@@ -44,7 +44,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
 }
 
-.btn-cancel {
+.btn-danger {
     border: 2px solid rgb(180, 70, 70);
     background-color: rgb(180, 70, 70);
     color: #ffffff;
