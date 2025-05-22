@@ -66,7 +66,15 @@ function createCharacterElement(character) {
                             canClose: true,
                             includeIf: ['A'].includes(API.settings.role),
                             classes: ['btn', 'btn-danger'],
-                            action: () => {}
+                            action: () => {
+                                API.deleteCharacter(character.id).then(response => {
+                                    if (response.ok) {
+                                        processGettingCharacters();
+                                    } else {
+                                        quickMessage(response.msg, {time: 5000, enabled: true})
+                                    }
+                                });
+                            }
                         },
                         {
                             label: 'Close',
@@ -274,13 +282,13 @@ async function importCharacter() {
 
 // Get the refresh token, and if the user isn't authorized send them ot the login page. Otherwise show the header navigation
 setTimeout(() => {
+        insertHeaderNav('body');
         API.grabRefreshToken().then(response => {
             if (response.ok) {
-                insertHeaderNav('body')
             } else {
-                redirect('/index.html')
+                redirect('/index.html');
                 quickMessage(response.msg, {time: 5000, enabled: true});
             }
         });
     }
-, 0);
+, 100);

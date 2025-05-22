@@ -333,8 +333,8 @@ class ServerConnection {
         }
         try {
             const header = this._combine(this.setReqParams('DELETE-auth'),
-                {   headers: { 'authorization': `Bearer ${accessToken}`},
-                    body: JSON.stringify({character})
+                {   headers: { 'authorization': `Bearer ${accessToken}`}//,
+                    // body: JSON.stringify({character})
                 }
             );
             const response = await fetch(BASE_URL() + 'characters/'+id, header);
