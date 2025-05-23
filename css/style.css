@@ -136,6 +136,16 @@ header {
     padding: 1rem;
 }
 
+.q-msg-ok {
+    background-color: #90df90
+}
+
+.q-msg-warning {
+    background-color: #d3df90
+}
+.q-msg-error {
+    background-color: #df9090
+}
 
 /****** Modal Styles *******/
 

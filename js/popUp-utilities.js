@@ -1,12 +1,14 @@
 
 
-function quickMessage(message, timer={time:5000, enabled:true}) {
+function quickMessage(message, timer={time:5000, enabled:true}, type) {
+    let msgType = type === 'error' ? 'q-msg-error' : type === 'warning' ? 'q-msg-warning' : 'q-msg-ok' 
     let body = document.querySelector('body');
     let msgContainer = document.createElement('div');
     msgContainer.innerHTML = `<div class='q-msg-close-container'><span class='q-msg-close'>&#10006;</span></div>
             <p class='q-msg'>${message}</p>
         `;
     msgContainer.classList.add('q-msg-container');
+    msgContainer.classList.add(msgType);
     const id = 'q-msg-'+crypto.randomUUID();
     msgContainer.classList.add(id);
     let closeBtn = msgContainer.querySelector('.q-msg-close');

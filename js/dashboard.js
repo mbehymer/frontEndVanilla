@@ -9,7 +9,7 @@ function processGettingCharacters() {
                 loadCharacters(characters)
             });
         } else {
-            quickMessage(response.msg, {time: 5000, enabled: true})
+            quickMessage(response.msg, {time: 5000, enabled: true}, 'error')
         }
     });
 }
@@ -56,7 +56,7 @@ function createCharacterElement(character) {
                                     if (response.ok) {
                                         processGettingCharacters();
                                     } else {
-                                        quickMessage(response.msg, {time: 5000, enabled: true})
+                                        quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
                                     }
                                 });
                             }
@@ -71,7 +71,7 @@ function createCharacterElement(character) {
                                     if (response.ok) {
                                         processGettingCharacters();
                                     } else {
-                                        quickMessage(response.msg, {time: 5000, enabled: true})
+                                        quickMessage(response.msg, {time: 5000, enabled: true}, 'error')
                                     }
                                 });
                             }
@@ -210,7 +210,7 @@ function createNewCharacter() {
         if (response.ok) {
             response.json().then((character)=> {console.log('character',character)});
         } else { 
-            quickMessage(response.msg, {time: 5000, enabled: true});
+            quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
         }
     });
     
@@ -252,14 +252,14 @@ async function importCharacter() {
                                                 console.log('success', res);
                                             });
                                         } else {
-                                            quickMessage(response.msg, {time: 5000, enabled: true});
+                                            quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
                                         }
                                     });
                                 })
                             }
                         } catch (err) {
                             console.error('Issue Importing: ', err);
-                            quickMessage('Invalid Data', {time: 0, enabled: false});
+                            quickMessage('Invalid Data', {time: 0, enabled: false}, 'error');
                         }
                     }
                 },
@@ -287,7 +287,7 @@ setTimeout(() => {
             if (response.ok) {
             } else {
                 redirect('/index.html');
-                quickMessage(response.msg, {time: 5000, enabled: true});
+                quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
             }
         });
     }
