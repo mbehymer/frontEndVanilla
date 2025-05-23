@@ -22,6 +22,22 @@ class ServerConnection {
 
     settings = {};
     
+    send = function(request, ...params) {
+        const calls = {
+            authenticate: this.authenticate(...params),
+            grabRefreshToken: this.grabRefreshToken(...params),
+            register: this.register(...params),
+            logout: this.logout(...params),
+            getCharacter: this.getCharacter(...params),
+            getCharacters: this.getCharacters(...params),
+            updateCharacter: this.updateCharacter(...params),
+            createCharacter: this.createCharacter(...params),
+            deleteCharacter: this.deleteCharacter(...params),
+        }
+
+        return calls[request];
+    }
+
     setReqParams = function(req) {
         return {
             'GET': this._reqForGET(),

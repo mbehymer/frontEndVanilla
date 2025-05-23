@@ -18,7 +18,7 @@ function processRegistration() {
     const pwdField = document.querySelector("#pwd");
     const pwdVerifyField = document.querySelector("#pwd-verify");
 
-    if (!verifyPassword(pwdField.value,pwdVerifyField.value)) return quickMessage('Passwords do not match!',{time:25000, enabled:true});
+    if (!verifyPassword(pwdField.value,pwdVerifyField.value)) return quickMessage('Passwords do not match!',{time:25000, enabled:true}, 'error');
 
     // submit the registration fields        
     const response = API.register({user: userField.value, pwd: pwdField.value});
@@ -28,7 +28,7 @@ function processRegistration() {
         if (res.ok) { 
             redirect('/index.html')
             quickMessage('Registration successful', {time:0, enabled: false});
-        } else { quickMessage("There was an error, please try logging in.", timer={time:5000, enabled:true}) };
+        } else { quickMessage("There was an error, please try logging in.", timer={time:5000, enabled:true}, 'error') };
     }
 
 
@@ -56,7 +56,7 @@ setTimeout(() => {
             insertHeaderNav('body')
         } else {
             redirect('/index.html')
-            quickMessage(response.msg, {time: 5000, enabled: true});
+            quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
         }
     });
 }
