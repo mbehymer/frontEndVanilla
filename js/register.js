@@ -21,15 +21,22 @@ function processRegistration() {
     if (!verifyPassword(pwdField.value,pwdVerifyField.value)) return quickMessage('Passwords do not match!',{time:25000, enabled:true}, 'error');
 
     // submit the registration fields        
-    const response = API.register({user: userField.value, pwd: pwdField.value});
-    if (response.ok) {
-    
-        let res = API.authenticate();
-        if (res.ok) { 
-            redirect('/index.html')
-            quickMessage('Registration successful', {time:0, enabled: false});
-        } else { quickMessage("There was an error, please try logging in.", timer={time:5000, enabled:true}, 'error') };
-    }
+    const response = API.send('register', {user: userField.value, pwd: pwdField.value}).then(response => {
+        
+        if (response.ok) {
+            let res = API.send('authenticate');
+            if (res.ok) { 
+                redirect('/index.html')
+                quickMessage('Registration successful', {time:0, enabled: false});
+            } else { quickMessage("There was an error, please try logging in.", timer={time:5000, enabled:true}, 'error') };
+        } else {
+            quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
+        }
+    })
+    .catch(err =>{
+        
+        quickMessage(err, {time: 5000, enabled: true}, 'error');
+    })
 
 
     // remove the values from the registration form
@@ -51,7 +58,7 @@ function transitionToLogin() {
 }
 
 setTimeout(() => {
-    API.grabRefreshToken().then(response => {
+    API.send('grabRefreshToken').then(response => {
         if (response.ok) {
             insertHeaderNav('body')
         } else {
