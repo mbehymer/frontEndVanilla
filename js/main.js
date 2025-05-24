@@ -2,7 +2,7 @@ function login() {
     // authenticate(() => {
     //     redirect('/dashboard.html');
     // });
-    API.authenticate().then(response => {
+    API.send('authenticate').then(response => {
         if (response.ok) { redirect('/dashboard.html'); }
         else { quickMessage(`LOGIN UNSUCCESSFUL: ${response.msg}`, timer={time:5000, enabled:true}, 'error') }
     })

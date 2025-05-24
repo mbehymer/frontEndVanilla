@@ -2,7 +2,7 @@ let dataStore = {};
 
 function processGettingCharacters() {
     updateCharactersButton();
-    API.getCharacters().then(response => {
+    API.send('getCharacters').then(response => {
         if (response.ok) {
             response.json().then((characters)=>{
                 dataStore.characters = characters;
@@ -50,9 +50,9 @@ function createCharacterElement(character) {
                             includeIf: ['A','E'].includes(API.settings.role),
                             classes: ['btn', 'btn-primary'],
                             action: () => {
-                                // TODO: Move authorization to the API. Possible solution - have all functions run through a initial function like API.run('nameOfAPIFunction', parameters)
+                                // TODO: Move authorization to the API. Possible solution - have all functions run through a initial function like API.send('nameOfAPIFunction', parameters)
                                 
-                                API.updateCharacter(getCharacter(character.id)).then(response => {
+                                API.send('updateCharacter', getCharacter(character.id)).then(response => {
                                     if (response.ok) {
                                         processGettingCharacters();
                                     } else {
@@ -67,7 +67,7 @@ function createCharacterElement(character) {
                             includeIf: ['A'].includes(API.settings.role),
                             classes: ['btn', 'btn-danger'],
                             action: () => {
-                                API.deleteCharacter(character.id).then(response => {
+                                API.send('deleteCharacter', character.id).then(response => {
                                     if (response.ok) {
                                         processGettingCharacters();
                                     } else {
@@ -206,7 +206,7 @@ function createNewCharacter() {
         } else { char[el[0]]=el[1] }
     });
     console.log(char);
-    API.createCharacter(char).then(response => {
+    API.send('createCharacter', char).then(response => {
         if (response.ok) {
             response.json().then((character)=> {console.log('character',character)});
         } else { 
@@ -246,7 +246,7 @@ async function importCharacter() {
             
                             if (Array.isArray(characterImport)) {
                                 characterImport.forEach(character => {
-                                    API.createCharacter(character).then(response => {
+                                    API.send('createCharacter', character).then(response => {
                                         if (response.ok) {
                                             response.json().then((res)=> {
                                                 console.log('success', res);
@@ -283,7 +283,7 @@ async function importCharacter() {
 // Get the refresh token, and if the user isn't authorized send them ot the login page. Otherwise show the header navigation
 setTimeout(() => {
         insertHeaderNav('body');
-        API.grabRefreshToken().then(response => {
+        API.send('grabRefreshToken').then(response => {
             if (response.ok) {
             } else {
                 redirect('/index.html');
