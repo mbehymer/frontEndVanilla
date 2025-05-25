@@ -316,8 +316,50 @@ gap: 20px;
 margin: 1rem 0;
 }
 
-#characters-container div {
+.character-card {
     padding: 1rem;
+    width: 160px;
     box-shadow: 0px 0px 5px 0px #00000033;
     border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 3px;
+}
+
+.character-card h3 {
+    margin: 0;
+}
+
+.character-card-bars-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1px;
+}
+
+.character-card-grouped-bars {
+    display: flex;
+    flex-direction: row;
+    padding: 2px 3px;
+    /* border-radius: 2px;
+    border: 1px solid #aaaaaa; */
+    background-color: #e2e2e2;
+    gap: 1px;
+}
+
+.character-card-bar {
+    width: 8px;
+    height: 14px;
+    /* border: 1px solid #949ea7; */
+    background: #89bfb7;
+    border-radius: 2px;
+}
+
+.character-card-bar-default {
+    width: 8px;
+    height: 14px;
+    /* border: 1px solid #949ea7; */
+    background: #c3c3c3;
+    border-radius: 2px;
 }

@@ -16,17 +16,46 @@ function processGettingCharacters() {
 
 function createCharacterElement(character) {
     let container = document.createElement('div');
+    container.classList.add('character-card');
     // const id = 'character-'+ character['id'];
     // container.id = id;
     let name = document.createElement('h3');
     // For each element on a character add
     let containerDetails = Object.entries(character)
-        .filter((entries) => { return entries[0] !== "id" && entries[0] !== "name"})
-        .map((entries) => {
+        .filter(([key, value]) => { return key !== "id" && key !== "name"})
+        .map(([key, value]) => {
             let label = document.createElement('span');
             let data = document.createElement('span');
-            label.innerText = entries[0] + ": ";
-            data.innerText = entries[1];
+            if (typeof value !== 'object') {
+                label.innerText = key + ": ";
+
+                if (typeof value === 'number' && value < 50) { // Just for fun
+                    console.log('character-card', getComputedStyle(container));
+                    data = document.createElement('div');
+                    data.classList.add('character-card-bars-container');
+                    let groupedBarsSize = 5;
+                    for(let i=1; i< (Math.ceil(value/groupedBarsSize) + 1); i++) {
+                        let groupedBars = document.createElement('div');
+                        groupedBars.classList.add('character-card-grouped-bars');
+                        let lastGroup = (i % Math.ceil(value/groupedBarsSize)) === 0;
+
+                        for(let j=0; j<groupedBarsSize; j++) {
+                            let bar = document.createElement('div');
+                            if (lastGroup && value % groupedBarsSize > 0 && j >= (value % groupedBarsSize)) {
+                                bar.classList.add('character-card-bar-default');
+                            } else {
+                                bar.classList.add('character-card-bar');
+                            }
+                            groupedBars.appendChild(bar);
+                        }
+                        data.appendChild(groupedBars);
+                    }
+                } else {
+                    data.innerText = value;
+                }
+            } else {
+
+            }
             let infoContainer = document.createElement('p');
             infoContainer.appendChild(label);
             infoContainer.appendChild(data);
