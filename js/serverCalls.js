@@ -37,6 +37,10 @@ class ServerConnection {
         
             loader.start();
         try {
+            
+            // Authenticate the user upon grabbing each request (Maybe not the best idea but oh well haha).
+            if (!['authenticate', 'grabRefreshToken', 'logout', 'register'].includes(request)) await this.send('grabRefreshToken');
+
             const response = await calls[request](...params);
             loader.end();
             return response;
