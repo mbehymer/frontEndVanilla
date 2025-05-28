@@ -307,6 +307,17 @@ body:has(.modal-backdrop) {
     padding: 0 1rem;
 }
 
+.grid-dashboard {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 5px;
+}
+
+.grid-item {
+    border: 1px solid #f1f1f1;
+    padding: 1rem;
+}
+
 
 #characters-container {
 display: flex;
