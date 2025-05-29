@@ -28,6 +28,7 @@ class ServerConnection {
             grabRefreshToken: this.grabRefreshToken,
             register: this.register,
             logout: this.logout,
+            getUserInfo: this.getUserInfo,
             getCharacter: this.getCharacter,
             getCharacters: this.getCharacters,
             updateCharacter: this.updateCharacter,
@@ -150,6 +151,7 @@ class ServerConnection {
             
             const data = response.ok ? await response.json() : false;
             this.settings.role = data.role;
+            this.settings.id = data.id;
             accessToken = data.accessToken;
             // loader.end();
             return response;
@@ -161,6 +163,7 @@ class ServerConnection {
         
         const data = response.ok ? await response.json() : false;
         this.settings.role=data.role;
+        this.settings.id = data.id;
         accessToken = data.accessToken;
         
         return response;
@@ -178,6 +181,12 @@ class ServerConnection {
 
     logout = async () => {
         return await fetch(BASE_URL() + 'logout', this.setReqParams('GET-auth'));
+    }
+
+    getUserInfo = async () => {
+        return await fetch(BASE_URL() + 'user-details/' + this.settings.id,
+            this._combine(this.setReqParams('GET-auth'), {headers: { 'authorization': `Bearer ${accessToken}` }})
+        );
     }
 
     getCharacter = async (id) => {
