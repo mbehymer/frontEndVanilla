@@ -312,12 +312,29 @@ async function importCharacter() {
 // Get the refresh token, and if the user isn't authorized send them ot the login page. Otherwise show the header navigation
 setTimeout(() => {
         insertHeaderNav('body');
-        API.send('grabRefreshToken').then(response => {
+        API.send('grabRefreshToken')
+        .then(response => {
             if (response.ok) {
+                return API.send('getUserInfo');
             } else {
                 redirect('/index.html');
                 quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
             }
+        })
+        .then( (res) => {
+            console.log(res);
+            // let data = await res.json();//.then((data)=> {
+            //     console.log('data', data);
+            // });
+            return res.json();
+        })
+        .then(data => {
+                console.log('json',data);
+                console.log('userInfo', data);
+        })
+        .catch(err => {
+            console.error('Error', err);
+            quickMessage(err, {time: 5000, enabled: true}, 'error');
         });
     }
 , 100);
