@@ -22,7 +22,19 @@ class ServerConnection {
 
     settings = {};
     
+    updateSettings = function() {
+        [...document.querySelectorAll(".dynamic")].forEach(el => {
+        const matches = el.textContent.matchAll(/{{(.*?)}}/g)
+        for (const match of matches) {
+            if (this.settings[match[1]]) el.innerHTML = el.innerHTML.replace(match[0], JSON.stringify(this.settings[match[1]]));
+        }
+        })
+    };
+    
     send = async function(request, ...params) {
+
+        let oldSettings = JSON.stringify(this.settings);
+        
         const calls = {
             authenticate: this.authenticate,
             grabRefreshToken: this.grabRefreshToken,
@@ -39,12 +51,21 @@ class ServerConnection {
             loader.start();
         try {
             
+            // Pre request
+
             // Authenticate the user upon grabbing each request (Maybe not the best idea but oh well haha).
             if (!['authenticate', 'grabRefreshToken', 'logout', 'register'].includes(request)) await this.send('grabRefreshToken');
 
             const response = await calls[request](...params);
+
+            // Post request
+            let newSettings = JSON.stringify(this.settings);
+
+            if (oldSettings !== newSettings) this.updateSettings();
+            
             loader.end();
             return response;
+
         } catch (err) {
             console.log(err.stack);
             loader.end();
@@ -184,9 +205,15 @@ class ServerConnection {
     }
 
     getUserInfo = async () => {
-        return await fetch(BASE_URL() + 'user-details/' + this.settings.id,
+        
+        const response = await fetch(BASE_URL() + 'user-details/' + this.settings.id,
             this._combine(this.setReqParams('GET-auth'), {headers: { 'authorization': `Bearer ${accessToken}` }})
         );
+        const data = response.ok && response.status !== 204 ? await response.json() : false;
+
+        this.settings.user = data;
+
+        return response;
     }
 
     getCharacter = async (id) => {
