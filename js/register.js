@@ -1,7 +1,3 @@
-function redirect(path) {
-    window.location.href = path;
-}
-
 function clearElementValues(...elements) {
     elements.forEach(element=>{
         element.value='';
@@ -26,7 +22,8 @@ function processRegistration() {
         if (response.ok) {
             let res = API.send('authenticate');
             if (res.ok) { 
-                redirect('/index.html')
+               
+                viewManager.redirect('login')
                 quickMessage('Registration successful', {time:0, enabled: false});
             } else { quickMessage("There was an error, please try logging in.", timer={time:5000, enabled:true}, 'error') };
         } else {
@@ -53,7 +50,8 @@ function transitionToLogin() {
     loginContainer.classList.remove('rotateFrom-90');
     loginContainer.classList.add('rotateTo90');
     loginContainer.addEventListener("animationend", ()=>{
-        redirect('/index.html')
+       
+        viewManager.redirect('login')
     }, false);
 }
 
@@ -62,7 +60,8 @@ registerCtrl = () => {
         if (response.ok) {
             insertHeaderNav('body')
         } else {
-            redirect('/index.html')
+           
+            viewManager.redirect('login')
             quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
         }
     });

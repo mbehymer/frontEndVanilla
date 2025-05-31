@@ -1,9 +1,12 @@
+
+
 function login() {
     // authenticate(() => {
-    //     redirect('/dashboard.html');
+    //    
+    // viewManager.redirect('dashboard');
     // });
     API.send('authenticate').then(response => {
-        if (response.ok) { redirect('/dashboard.html'); }
+        if (response.ok) { viewManager.redirect('dashboard'); }
         else { quickMessage(`LOGIN UNSUCCESSFUL: ${response.msg}`, timer={time:5000, enabled:true}, 'error') }
     })
 }
@@ -13,7 +16,7 @@ function transitionToRegister() {
     loginContainer.classList.remove('rotateFrom-90');
     loginContainer.classList.add('rotateTo90');
     loginContainer.addEventListener("animationend", ()=>{
-        redirect('/register.html')
+        viewManager.redirect('register')
     }, false);
 }
 
