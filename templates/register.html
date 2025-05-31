@@ -1,0 +1,23 @@
+<main>
+    <div id="register-form" class="flex-col-center rotateFrom-90">
+        <!-- <div id="login-container" class="flex-col-center"> -->
+        <h1>Register</h1>
+        <div class="register-field">
+            <label for="username">Username: </label>
+            <input id="username" type="text" placeholder="j_doe">
+        </div>
+        <div class="register-field">
+            <label for="pwd">Password: </label>
+            <input id="pwd" type="password" placeholder="pwd123"  required>
+        </div>
+        
+        <div class="register-field">
+            <label for="pwd-verify">Verify Password: </label>
+            <input id="pwd-verify" type="password" placeholder="pwd123" required>
+        </div>
+        <button class="btn btn-primary" onclick="processRegistration()">Submit</button>
+        <p class="txt-center">Go to <button class="btn btn-secondary" onclick="transitionToLogin()">login</button></p>
+    </div>
+</main>
+
+<!-- = 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf()); } parent.appendChild(elem); } } var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://'; var address = protocol + window.location.host + window.location.pathname + '/ws'; var socket = new WebSocket(address); socket.onmessage = function (msg) { if (msg.data == 'reload') window.location.reload(); else if (msg.data == 'refreshcss') refreshCSS(); }; if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) { console.log('Live reload enabled.'); sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true); } })(); } else { console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.'); } // ]]> -->

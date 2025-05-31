@@ -310,7 +310,7 @@ async function importCharacter() {
 // =================== On Load Run Code Below ====================
 
 // Get the refresh token, and if the user isn't authorized send them ot the login page. Otherwise show the header navigation
-setTimeout(() => {
+dashboardCtrl = () => {
         insertHeaderNav('body');
         API.send('grabRefreshToken')
         .then(response => {
@@ -333,5 +333,4 @@ setTimeout(() => {
             console.error('Error', err);
             quickMessage(err, {time: 5000, enabled: true}, 'error');
         });
-    }
-, 100);
+}
