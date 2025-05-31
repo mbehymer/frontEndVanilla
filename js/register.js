@@ -57,7 +57,7 @@ function transitionToLogin() {
     }, false);
 }
 
-setTimeout(() => {
+registerCtrl = () => {
     API.send('grabRefreshToken').then(response => {
         if (response.ok) {
             insertHeaderNav('body')
@@ -66,5 +66,4 @@ setTimeout(() => {
             quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
         }
     });
-}
-, 100);
+};

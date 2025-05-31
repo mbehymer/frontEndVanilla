@@ -17,10 +17,10 @@ function transitionToRegister() {
     }, false);
 }
 
-(() => {
+loginCtrl = () => {
     let source = document.querySelector('#source-selector');
     if (localStorage.getItem('SERVER_SRC')) { source.value = localStorage.getItem('SERVER_SRC');}
     source.addEventListener('change', e => {
         localStorage.setItem('SERVER_SRC', e.target.value);
     })
-})();
+};
