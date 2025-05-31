@@ -1,3 +1,6 @@
+let viewManager = new ViewManager();
+
+
 (function _App() {
-    manageView();
+    viewManager.loadView();
 })();

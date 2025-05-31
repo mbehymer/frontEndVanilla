@@ -1,5 +1,5 @@
-function manageView() {
-    const views = {
+class ViewManager {
+    views = {
         dashboard: {
             name: 'dashboard',
             run: dashboardCtrl,
@@ -17,22 +17,24 @@ function manageView() {
         }
     }
 
-    function loadView(view) {
+    loadView() {
         try {
-            fetch(view.template).then(res => {
+            if (!this.view()) this.redirect('login');
+
+            fetch(this.view().template).then(res => {
                 return res.text();
             })
             .then(file => {
                 let body = document.querySelector('body');
                 body.innerHTML = file;
-                view.run();
+                this.view().run();
             })
         } catch (err) {
-            console.error('loadView:', view, 'Error:', err);
+            console.error('loadView:', this.view(), 'Error:', err);
         }
     }
 
-    let params = () => { return location.search.replace('?','').split('&').map(search => {
+    params = () => { return location.search.replace('?','').split('&').map(search => {
             let pair = search.split('=');
             let key = pair[0];
             let value = pair[1];
@@ -41,6 +43,22 @@ function manageView() {
     }; // Probably could use Object.assign({}) here to make this into an object...
 
 
-    let view = params().filter(param => param.key === 'view')[0];
-    loadView(views[view.value]);
+    view = () => {
+        let viewParam = this.params().filter(param => param.key === 'view')[0];
+        if (viewParam === undefined) return false;
+        return this.views[viewParam.value];
+    }
+
+   
+    redirect(path) {
+        if (!this.views.hasOwnProperty(path)) return false;
+
+        const url = new URL(window.location.href);
+        url.searchParams.set('view', path);
+        window.history.replaceState(null, null, url); // or pushState
+
+        this.loadView();
+        // window.location.href = `index.html?view=${path}`;
+    }
+
 }

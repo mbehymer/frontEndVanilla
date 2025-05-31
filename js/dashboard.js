@@ -317,7 +317,8 @@ dashboardCtrl = () => {
             if (response.ok) {
                 return API.send('getUserInfo');
             } else {
-                redirect('/index.html');
+               
+                viewManager.redirect('login');
                 quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
             }
         })

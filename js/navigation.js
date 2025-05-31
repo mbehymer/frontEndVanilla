@@ -4,7 +4,7 @@ function insertHeaderNav(parentElement) {
     navbar.id='navbar';
     navbar.innerHTML =`
                 <ul>
-                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="index.html?view=dashboard">Dashboard</a></li>
                     <li><button class="btn btn-secondary logout-btn">Logout</button></li>
                 </ul>
         `;
@@ -12,7 +12,8 @@ function insertHeaderNav(parentElement) {
     let firstChild = parent.firstElementChild
     navbar.querySelector('.logout-btn').addEventListener('click', async () => {
         await API.send('logout');
-        redirect('/index.html');
+       
+        viewManager.redirect('login');
     })
     if (firstChild.tagName === 'HEADER') {
         firstChild.appendChild(navbar);
