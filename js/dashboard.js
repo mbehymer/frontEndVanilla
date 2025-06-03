@@ -322,14 +322,6 @@ dashboardCtrl = () => {
                 quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
             }
         })
-        // .then( (res) => {
-        //     console.log(res);
-        //     return res.json();
-        // })
-        // .then(data => {
-        //         console.log('json',data);
-        //         console.log('userInfo', data);
-        // })
         .catch(err => {
             console.error('Error', err);
             quickMessage(err, {time: 5000, enabled: true}, 'error');

@@ -56,7 +56,9 @@ class ServerConnection {
             // Authenticate the user upon grabbing each request (Maybe not the best idea but oh well haha).
             if (!['authenticate', 'grabRefreshToken', 'logout', 'register'].includes(request)) await this.send('grabRefreshToken');
 
-            const response = await calls[request](...params);
+            let response = await calls[request](...params);
+            if (response.msg === undefined) response.msg = response.statusText;
+            
 
             // Post request
             let newSettings = JSON.stringify(this.settings);
@@ -191,13 +193,18 @@ class ServerConnection {
     }
 
     register = async (info={user: false, pwd: false}) => {
-        if (!info.user || !info.pwd) return { ok: false, msg: `Please fill in the ${!info.user && ! info.pwd ? 'username and password' : !info.user ? 'username' : 'password'}`};
-        
-        const response = await fetch(BASE_URL() + 'register', 
-            this._combine(this.setReqParams('POST-auth'), { body: JSON.stringify({ user: info.user, pwd: info.pwd })})
-        );
-        accessToken = await response.json();
-        return response;
+        try {
+            
+            if (!info.user || !info.pwd) return { ok: false, msg: `Please fill in the ${!info.user && ! info.pwd ? 'username and password' : !info.user ? 'username' : 'password'}`};
+            
+            const response = await fetch(BASE_URL() + 'register', 
+                this._combine(this.setReqParams('POST-auth'), { body: JSON.stringify({ user: info.user, pwd: info.pwd })})
+            );
+            if (response.ok) accessToken = await response.json();
+            return response;
+        } catch (err) {
+            return {ok: false, msg: err.stack}
+        }
     }
 
     logout = async () => {

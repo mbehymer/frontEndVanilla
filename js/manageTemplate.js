@@ -14,6 +14,11 @@ class ViewManager {
             name: 'register',
             run: registerCtrl,
             template: 'templates/register.html'
+        },
+        editProfile: {
+            name: 'editProfile',
+            run: editProfileCtrl,
+            template: 'templates/edit_profile.html'
         }
     }
 
