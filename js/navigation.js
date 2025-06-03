@@ -4,6 +4,7 @@ function insertHeaderNav(parentElement) {
     navbar.id='navbar';
     navbar.innerHTML =`
                 <ul>
+                    <li><a href="index.html?view=editProfile">Edit</a></li>
                     <li><a href="index.html?view=dashboard">Dashboard</a></li>
                     <li><button class="btn btn-secondary logout-btn">Logout</button></li>
                 </ul>

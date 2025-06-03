@@ -61,8 +61,11 @@ registerCtrl = () => {
             insertHeaderNav('body')
         } else {
            
-            viewManager.redirect('login')
+            // viewManager.redirect('login')
             quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
         }
+    })
+    .catch(err => {
+        console.warn('err', error)
     });
 };
