@@ -41,6 +41,7 @@ class ServerConnection {
             register: this.register,
             logout: this.logout,
             getUserInfo: this.getUserInfo,
+            updateUserInfo: this.updateUserInfo,
             getCharacter: this.getCharacter,
             getCharacters: this.getCharacters,
             updateCharacter: this.updateCharacter,
@@ -208,7 +209,10 @@ class ServerConnection {
     }
 
     logout = async () => {
-        return await fetch(BASE_URL() + 'logout', this.setReqParams('GET-auth'));
+
+        const response = await fetch(BASE_URL() + 'logout', this.setReqParams('GET-auth'));
+        if (response.ok) this.settings = {};
+        return response;
     }
 
     getUserInfo = async () => {
@@ -219,6 +223,25 @@ class ServerConnection {
         const data = response.ok && response.status !== 204 ? await response.json() : false;
 
         this.settings.user = data;
+
+        return response;
+    }
+
+    updateUserInfo = async (userInfo) => {
+        
+        const response = await fetch(BASE_URL() + 'user-details/' + this.settings.id,
+            this._combine(this.setReqParams('PUT-auth'), 
+                { headers: { 'authorization': `Bearer ${accessToken}`},
+                    body: JSON.stringify(userInfo)
+                }
+            )
+        )
+        const data = response.ok && response.status !== 204 ? await response.json() : false;
+
+        if (response.ok) {
+            this.settings.user = data.userData;
+            this.settings.id = data.id;
+        }
 
         return response;
     }
