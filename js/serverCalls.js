@@ -15,25 +15,43 @@ function delay(ms) {
 }
 
 class ServerConnection {
-    // constructor(name = "", level = 1, power = 1, health = 1, weapon = {}) {
-    //     this.settings
-    // }
+    constructor() {
+        this.settings.watch(false, this.updateSettings);
+    }
     // accessToken;
 
-    settings = {};
+    settings = {
+        immutableList: ['immutableList', 'watchList', 'watchAll', 'watch', 'set', 'get'],
+        watchList: {},
+        watchAll: [], // List of all functions to run whenever a value is set in settings
+        watch: (key, run) => { // this is only a shallow watch
+            if (!key) return this.settings.watchAll.push(run);
+            watchList[key] = watchList[key] ? [...watchList[key], run] : [run]; // for a give property to watch attach a function and if there is another function tied to the property we are watching continue adding functions so that they all can run when the value is updated
+        },
+        set: (key, newValue) => { // Should this be an asynch function? Maybe so incase you want to keep the function going... but I think you can decide that with the function passed into the watch function
+            if ( this.settings.immutableList.includes(key) ) throw new Error(`Property ${key} is not mutable and thus cannot be changed`); 
+            let oldValue = this.settings[key];
+            this.settings[key] = newValue;
+
+            this.settings.watchAll.forEach(func => func(newValue, oldValue)); // this will run any function that is added to the watchAll array
+            this.settings.watchList[key]?.forEach(func => func(newValue, oldValue) );// Run each function that is tied to that key
+            
+        },
+        get: (key) => { return this.settings[key] }
+    };
     
-    updateSettings = function() {
+    updateSettings = () => {
         [...document.querySelectorAll(".dynamic")].forEach(el => {
         const matches = el.textContent.matchAll(/{{(.*?)}}/g)
         for (const match of matches) {
-            if (this.settings[match[1]]) el.innerHTML = el.innerHTML.replace(match[0], JSON.stringify(this.settings[match[1]]));
+            if ( this.settings.get([match[1]]) ) el.innerHTML = el.innerHTML.replace(match[0], JSON.stringify(this.settings.get([match[1]])));
         }
         })
     };
     
     send = async function(request, ...params) {
 
-        let oldSettings = JSON.stringify(this.settings);
+        // let oldSettings = JSON.stringify(this.settings);
         
         const calls = {
             authenticate: this.authenticate,
@@ -62,9 +80,9 @@ class ServerConnection {
             
 
             // Post request
-            let newSettings = JSON.stringify(this.settings);
+            // let newSettings = JSON.stringify(this.settings);
 
-            if (oldSettings !== newSettings) this.updateSettings();
+            // if (oldSettings !== newSettings) this.updateSettings();
             
             loader.end();
             return response;
@@ -174,8 +192,8 @@ class ServerConnection {
             );
             
             const data = response.ok ? await response.json() : false;
-            this.settings.role = data.role;
-            this.settings.id = data.id;
+            this.settings.set('role', data.role);
+            this.settings.set('id', data.id);
             accessToken = data.accessToken;
             // loader.end();
             return response;
@@ -186,8 +204,8 @@ class ServerConnection {
         const response = await fetch(BASE_URL() + 'refresh', this.setReqParams('GET-auth'));
         
         const data = response.ok ? await response.json() : false;
-        this.settings.role=data.role;
-        this.settings.id = data.id;
+        this.settings.set('role', data.role);
+        this.settings.set('id', data.id);
         accessToken = data.accessToken;
         
         return response;
@@ -217,19 +235,19 @@ class ServerConnection {
 
     getUserInfo = async () => {
         
-        const response = await fetch(BASE_URL() + 'user-details/' + this.settings.id,
+        const response = await fetch(BASE_URL() + 'user-details/' + this.settings.get('id'),
             this._combine(this.setReqParams('GET-auth'), {headers: { 'authorization': `Bearer ${accessToken}` }})
         );
         const data = response.ok && response.status !== 204 ? await response.json() : false;
 
-        this.settings.user = data;
+        this.settings.set('user', data);
 
         return response;
     }
 
     updateUserInfo = async (userInfo) => {
         
-        const response = await fetch(BASE_URL() + 'user-details/' + this.settings.id,
+        const response = await fetch(BASE_URL() + 'user-details/' + this.settings.get('id'),
             this._combine(this.setReqParams('PUT-auth'), 
                 { headers: { 'authorization': `Bearer ${accessToken}`},
                     body: JSON.stringify(userInfo)
@@ -239,8 +257,8 @@ class ServerConnection {
         const data = response.ok && response.status !== 204 ? await response.json() : false;
 
         if (response.ok) {
-            this.settings.user = data.userData;
-            this.settings.id = data.id;
+            this.settings.set('user', data.userData);
+            this.settings.set('id', data.id);
         }
 
         return response;
@@ -259,7 +277,7 @@ class ServerConnection {
     }
 
     updateCharacter = async (character) => {
-        if (!['A','E'].includes(this.settings.role)) {
+        if (!['A','E'].includes(this.settings.get('role'))) {
             return { ok: false, msg: 'You are not allowed to Update'};
         }
         return await fetch(BASE_URL() + 'characters', 
@@ -271,7 +289,7 @@ class ServerConnection {
     }
 
     createCharacter = async (character) => {
-        if (!['A','E'].includes(this.settings.role)) {
+        if ( !['A','E'].includes( this.settings.get('role') ) ) {
             return { ok: false, msg: 'You are not allowed to Create'};
         }
         const header = this._combine(this.setReqParams('POST-auth'),
@@ -283,7 +301,7 @@ class ServerConnection {
     }
     
     deleteCharacter = async (id) => {
-        if (!['A'].includes(this.settings.role)) {
+        if ( !['A'].includes(this.settings.get('role')) ) {
             return { ok: false, msg: 'You are not allowed to Delete'};
         }
         const header = this._combine(this.setReqParams('DELETE-auth'),

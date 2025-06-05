@@ -14,13 +14,13 @@ function processProfileForm() {
     })
 }
 
-function populateForm(data) {
-    if (data.user) {
+function populateForm(user) {
+    if (user) {
         let firstName = document.querySelector('#firstName');
         let lastName = document.querySelector('#lastName');
 
-        firstName.value = data.user.firstName;
-        lastName.value = data.user.lastName;
+        firstName.value = user.firstName;
+        lastName.value = user.lastName;
     }
 }
 
@@ -41,7 +41,7 @@ function editProfileCtrl() {
     })
     .then(res=> {
         if (res.ok) {
-            populateForm(API.settings);
+            populateForm(API.settings.get('user'));
         }
     })
     .catch(err => {
