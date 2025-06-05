@@ -76,7 +76,7 @@ function createCharacterElement(character) {
                         {
                             label: 'Update',
                             canClose: true,
-                            includeIf: ['A','E'].includes(API.settings.role),
+                            includeIf: ['A','E'].includes(API.settings.get('role')),
                             classes: ['btn', 'btn-primary'],
                             action: () => {
                                 // TODO: Move authorization to the API. Possible solution - have all functions run through a initial function like API.send('nameOfAPIFunction', parameters)
@@ -93,7 +93,7 @@ function createCharacterElement(character) {
                         {
                             label: 'Delete',
                             canClose: true,
-                            includeIf: ['A'].includes(API.settings.role),
+                            includeIf: ['A'].includes(API.settings.get('role')),
                             classes: ['btn', 'btn-danger'],
                             action: () => {
                                 API.send('deleteCharacter', character.id).then(response => {
@@ -166,7 +166,7 @@ function createEditCharacterModal(character) {
         if (typeof value !== 'object') {
             const id = label + '-' + crypto.randomUUID();
             let valueType = typeof value === 'number' ? 'number' : 'text';
-            if (['A','E'].includes(API.settings.role)) {
+            if (['A','E'].includes(API.settings.get('role'))) {
                 field.innerHTML = `
                     <label for='${id}'>${label}: </label>
                     <input id='${id}' type='${valueType}' value='${value}'>
