@@ -28,7 +28,7 @@ class ServerConnection {
             if (!key) return this.settings.watchAll.push(run);
             watchList[key] = watchList[key] ? [...watchList[key], run] : [run]; // for a give property to watch attach a function and if there is another function tied to the property we are watching continue adding functions so that they all can run when the value is updated
         },
-        set: (key, newValue) => { // Should this be an asynch function? Maybe so incase you want to keep the function going... but I think you can decide that with the function passed into the watch function
+        set: (key, newValue) => { // Should this be an async function? Maybe so incase you want to keep the function going... but I think you can decide that with the function passed into the watch function
             if ( this.settings.immutableList.includes(key) ) throw new Error(`Property ${key} is not mutable and thus cannot be changed`); 
             let oldValue = this.settings[key];
             this.settings[key] = newValue;
