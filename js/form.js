@@ -13,17 +13,21 @@ class Form {
         Object(objectForm).entries.forEach(([key, value]) => {
             if (key === 'fields') {
                 value.forEach(field => {
-                    
+                    this.generateField(field);
                 })
             }
         });
     };
 
     generateField = (field) => {
-        let htmlField = ``;
+        let div = document.createElement('div');
+        div.classList.add('form-element dynamic');
         if (field.type === 'input') {
-            htmlField = `<input type="${field.valueType}">`
+            div.innerHTML = `<label for="${field.id}>${field.label}</label><input id="${field.id}" type="${field.valueType}" value="{{}}">`;
+        } else if (field.type = 'textarea') {
+            div.innerHTML = `<textarea id="${field.id}">{{}}</textarea>`;
         }
+
     }
 
     loadFile = (file) => {
