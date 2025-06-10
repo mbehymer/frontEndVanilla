@@ -41,7 +41,78 @@ function editProfileCtrl() {
     })
     .then(res=> {
         if (res.ok) {
-            populateForm(API.settings.get('user'));
+            let form = new Form({
+                "settings": {
+
+                },
+                "displayOrder": 0,
+                "items": [
+                    {
+                        "displayOrder": 1,
+                        "objType": "container",
+                        "items": [
+                            {
+                                "displayOrder": 1,
+                                "id": "firstName",
+                                "label": "First Name",
+                                "valueType": "text",
+                                "objType": "field",
+                                "type": "input",
+                                "objDepth": 2
+                            },
+                            {
+                                "displayOrder": 2,
+                                "id": "lastName",
+                                "label": "Last Name",
+                                "valueType": "text",
+                                "objType": "field",
+                                "type": "input",
+                                "objDepth": 2
+                            }
+                        ],
+                        "objDepth": 1
+                    },
+                    {
+                        "displayOrder": 2,
+                        "objType": "container",
+                        "items": [
+                            {
+                                "displayOrder": 1,
+                                "id": "favoriteColor",
+                                "label": "Favorite Color",
+                                "valueType": "text",
+                                "objType": "field",
+                                "type": "input",
+                                "objDepth": 2
+                            },
+                            {
+                                "displayOrder": 2,
+                                "id": "phoneNumber",
+                                "label": "Phone Number",
+                                "valueType": "tel",
+                                "objType": "field",
+                                "type": "input",
+                                "objDepth": 2
+                            }
+                        ],
+                        "objDepth": 1
+                    },
+                    {
+                        "displayOrder": 3,
+                        "id": "note",
+                        "label": "Notes",
+                        "valueType": "text",
+                        "objType": "field",
+                        "type": "textarea",
+                        "objDepth": 2
+                    }
+                ],
+                "objType": "container",
+                "objDepth": 0
+            }, 'object');
+            console.log('form', form);
+            document.querySelector('#info-form').replaceChildren(...[form.formHTML]);
+            // populateForm(API.settings.get('user'));
         }
     })
     .catch(err => {

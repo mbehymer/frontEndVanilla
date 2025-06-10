@@ -1,7 +1,7 @@
 class Form {
     constructor(form, type) {
         if (type === 'object') {
-            this.formHTML = (loadObject(form))
+            this.formHTML = this.loadObject(form);
         } else if (type === 'fileName') {
             loadFile(form)
         }
@@ -11,27 +11,30 @@ class Form {
     formHTML;
 
     loadObject = (formObj) => {
-        Object(formObj).entries.forEach(([key, value]) => {
-            let container = document.createElement('div');
-            container.classList.add(`form-element-container form-element-order-${formObj.displayOrder}`);
-            let groupedItems = [];
+        // let groupedItems = [];
+        let container = document.createElement('div');
+        container.classList.add(...["form-element-container", `form-element-order-${formObj.displayOrder}`]);
+        Object.entries(formObj).forEach(([key, value]) => {
+            // let groupedItems = [];
             if (key === 'items') {
                 value.forEach(item => {
                     if (item.objType === "field") {
-                        groupedItems.push(this.generateField(item));
+                        container.appendChild(this.generateField(item));
                     } else if (item.objType === "container") {
-                        groupedItems.push(this.loadObject(item));
+                        container.appendChild(this.loadObject(item));
                     };
                 });
             }
+            // sections.push(groupedItems);
         });
+        return container;
     };
 
     generateField = (field) => {
         let div = document.createElement('div');
-        div.classList.add(`form-element dynamic form-element-order-${field.displayOrder}`);
+        div.classList.add(...["form-element-container", `form-element-order-${field.displayOrder}`]);
         if (field.type === 'input') {
-            div.innerHTML = `<label for="${field.id}>${field.label}</label><input id="${field.id}" type="${field.valueType}" value="{{}}">`;
+            div.innerHTML = `<label for="${field.id}">${field.label}</label><input id="${field.id}" type="${field.valueType}" value="{{}}">`;
         } else if (field.type = 'textarea') {
             div.innerHTML = `<textarea id="${field.id}">{{}}</textarea>`;
         }
@@ -42,5 +45,10 @@ class Form {
     loadFile = (file) => {
         
     }
+
+    // connectElements = (listOfElements) {
+
+    //     listOfElements.forEach()
+    // }
 
 }
