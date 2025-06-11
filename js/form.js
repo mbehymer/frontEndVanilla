@@ -2,6 +2,7 @@ class Form {
     constructor(form, type) {
         if (type === 'object') {
             this.formHTML = this.loadObject(form);
+            API.updateSettings(this.formHTML);
         } else if (type === 'fileName') {
             loadFile(form)
         }
@@ -34,9 +35,9 @@ class Form {
         let div = document.createElement('div');
         div.classList.add(...["form-element-container", `form-element-order-${field.displayOrder}`]);
         if (field.type === 'input') {
-            div.innerHTML = `<label for="${field.id}">${field.label}</label><input id="${field.id}" type="${field.valueType}" value="{{}}">`;
+            div.innerHTML = `<label for="${field.id}">${field.label}</label><input id="${field.id}"  class="dynamic" type="${field.valueType}" value="{{data.${field.id}}}">`;
         } else if (field.type = 'textarea') {
-            div.innerHTML = `<textarea id="${field.id}">{{}}</textarea>`;
+            div.innerHTML = `<textarea id="${field.id}">{{data?.${field.id}}}</textarea>`;
         }
         return div;
 

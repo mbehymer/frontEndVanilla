@@ -16,7 +16,7 @@ function delay(ms) {
 
 class ServerConnection {
     constructor() {
-        this.settings.watch(false, this.updateSettings);
+        this.settings.watch(false, ()=> this.updateSettings() );
     }
     // accessToken;
 
@@ -40,8 +40,11 @@ class ServerConnection {
         get: (key) => { return this.settings[key] }
     };
     
-    updateSettings = () => {
-        [...document.querySelectorAll(".dynamic")].forEach(el => {
+    updateSettings = (element) => { // TODO: At some point I need to have this function reference the original HTML and then update a copy of it, rather than updating the original because otherwise I lose where the original had the dynamic fields...
+        let allElements = []; 
+        allElements = !!element ? [...element.querySelectorAll(".dynamic")] : [...document.querySelectorAll(".dynamic")];
+
+        allElements.forEach(el => {
         const matches = el.textContent.matchAll(/{{(.*?)}}/g)
         for (const match of matches) {
             if ( this.settings.get([match[1]]) ) el.innerHTML = el.innerHTML.replace(match[0], JSON.stringify(this.settings.get([match[1]])));
@@ -66,7 +69,6 @@ class ServerConnection {
             createCharacter: this.createCharacter,
             deleteCharacter: this.deleteCharacter,
         }
-        
             loader.start();
         try {
             
