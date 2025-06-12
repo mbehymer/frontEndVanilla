@@ -37,7 +37,20 @@ class ServerConnection {
             this.settings.watchList[key]?.forEach(func => func(newValue, oldValue) );// Run each function that is tied to that key
             
         },
-        get: (key) => { return this.settings[key] }
+        get: (key) => { 
+            if (Array.isArray(key)) { // If someone passes in an array
+                let currentObj = this.settings
+                key.forEach(path => {
+                    currentObj = currentObj[path];
+                });
+                return currentObj
+            } else if (key.includes('.')) {
+                let pathing = key.split('.')
+                return this.settings.get(pathing);
+            } else {
+                return this.settings[key] 
+            }
+        }
     };
     
     updateSettings = (element) => { // TODO: At some point I need to have this function reference the original HTML and then update a copy of it, rather than updating the original because otherwise I lose where the original had the dynamic fields...
@@ -45,11 +58,22 @@ class ServerConnection {
         allElements = !!element ? [...element.querySelectorAll(".dynamic")] : [...document.querySelectorAll(".dynamic")];
 
         allElements.forEach(el => {
-        const matches = el.textContent.matchAll(/{{(.*?)}}/g)
-        for (const match of matches) {
-            if ( this.settings.get([match[1]]) ) el.innerHTML = el.innerHTML.replace(match[0], JSON.stringify(this.settings.get([match[1]])));
-        }
-        })
+            if (el.nodeName === 'INPUT') {
+                const matches = el.value.matchAll(/{{(.*?)}}/g)
+                for (const match of matches) {
+                    let val = this.settings.get(match[1]);
+                    if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
+                        val = JSON.stringify(val);
+                    } 
+                    if ( val ) el.value = el.value.replace(match[0], JSON.stringify(this.settings.get(match[1])));
+                }
+            } else {
+                const matches = el.textContent.matchAll(/{{(.*?)}}/g)
+                for (const match of matches) {
+                    if ( this.settings.get(match[1]) ) el.textContent = el.textContent.replace(match[0], JSON.stringify(this.settings.get(match[1])));
+                }
+            }
+        });
     };
     
     send = async function(request, ...params) {

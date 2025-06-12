@@ -35,9 +35,9 @@ class Form {
         let div = document.createElement('div');
         div.classList.add(...["form-element-container", `form-element-order-${field.displayOrder}`]);
         if (field.type === 'input') {
-            div.innerHTML = `<label for="${field.id}">${field.label}</label><input id="${field.id}"  class="dynamic" type="${field.valueType}" value="{{data.${field.id}}}">`;
+            div.innerHTML = `<label for="${field.id}">${field.label}</label><input id="${field.id}"  class="dynamic" type="${field.valueType}" value="{{user.${field.id}}}">`;
         } else if (field.type = 'textarea') {
-            div.innerHTML = `<textarea id="${field.id}">{{data?.${field.id}}}</textarea>`;
+            div.innerHTML = `<textarea id="${field.id}">{{user?.${field.id}}}</textarea>`;
         }
         return div;
 
