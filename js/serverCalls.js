@@ -41,7 +41,9 @@ class ServerConnection {
             if (Array.isArray(key)) { // If someone passes in an array
                 let currentObj = this.settings
                 key.forEach(path => {
-                    currentObj = currentObj[path];
+                    if (currentObj !== undefined) {
+                        currentObj = currentObj[path];
+                    }
                 });
                 return currentObj
             } else if (key.includes('.')) {
@@ -65,12 +67,24 @@ class ServerConnection {
                     if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
                         val = JSON.stringify(val);
                     } 
-                    if ( val ) el.value = el.value.replace(match[0], JSON.stringify(this.settings.get(match[1])));
+                    if ( val ) {
+                        let newVal = el.value.replace(match[0], val);
+                        
+                        el.value = newVal;
+                    }
                 }
             } else {
                 const matches = el.textContent.matchAll(/{{(.*?)}}/g)
                 for (const match of matches) {
-                    if ( this.settings.get(match[1]) ) el.textContent = el.textContent.replace(match[0], JSON.stringify(this.settings.get(match[1])));
+                    let val = this.settings.get(match[1]);
+                    if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
+                        val = JSON.stringify(val);
+                    } 
+                    if ( val ) {
+                        let newVal = el.textContent.replace(match[0], val);
+                        
+                        el.textContent = newVal;
+                    }
                 }
             }
         });
