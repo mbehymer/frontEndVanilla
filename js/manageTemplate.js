@@ -30,9 +30,9 @@ class ViewManager {
                 return res.text();
             })
             .then(file => {
-                let body = document.querySelector('body');
+                let body = document.querySelector('body'); // At some point this should be changed so that it doesn't use the body, but rather gets put into whatever parent container it was requested for... So it could be part of a template.
                 
-                body.innerHTML = file;
+                body.innerHTML = this.templateHTML(this.view().name, file).innerHTML;
                 this.view().run();
             })
         } catch (err) {
@@ -59,16 +59,22 @@ class ViewManager {
 
     templateHTMLList = {}; // This is to store the original versions of the HTML
 
-    templateHTML = (key, value) => {
+    templateHTML = (key, type, value) => {
+        if (this.templateHTMLList[key] === undefiend) this.templateHTMLList[key] = {};
         if (!value) {
-            return this.templateHTMLList[key].cloneNode(true).innerHTML; // I don't know that this will really be all that useful to clone and only send the innerHTML seems like cloning is pointless...
+            return this.templateHTMLList[key]['updated'].cloneNode(true);//.innerHTML; // I don't know that this will really be all that useful to clone and only send the innerHTML seems like cloning is pointless...
         }
 
-        this.templateHTMLList[key] = document.createElement('div');
+        let container = document.createElement('div');
         if (this.isElement(value)) {
-            this.templateHTMLList[key].appendChild(value);
+            container.appendChild(value);
         } else {
-            this.templateHTMLList[key].innerHTML = value;
+            container.innerHTML = value;
+        }
+        if (this.templateHTMLList[key]['original'] === undefined) {
+            this.templateHTMLList[key]['original'] = container;
+        } else {
+            this.templateHTMLList[key]['updated'] = container;
         }
         return this.templateHTML(key); // This just executes the first line of this function so I don't have to repeat it...
     }
