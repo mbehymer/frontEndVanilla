@@ -57,7 +57,9 @@ class ServerConnection {
     
     updateSettings = (element) => { // TODO: At some point I need to have this function reference the original HTML and then update a copy of it, rather than updating the original because otherwise I lose where the original had the dynamic fields...
         let allElements = []; 
-        allElements = !!element ? [...element.querySelectorAll(".dynamic")] : [...document.querySelectorAll(".dynamic")];
+        allElements = !!element ? 
+            [...element.querySelectorAll(".dynamic")] : 
+            [...viewManager.templateHTML(viewManager.view().name).querySelectorAll(".dynamic")];
 
         allElements.forEach(el => {
             if (el.nodeName === 'INPUT') {
@@ -71,6 +73,8 @@ class ServerConnection {
                         let newVal = el.value.replace(match[0], val);
                         
                         el.value = newVal;
+                    } else {
+                        el.value = '';
                     }
                 }
             } else {
@@ -84,6 +88,8 @@ class ServerConnection {
                         let newVal = el.textContent.replace(match[0], val);
                         
                         el.textContent = newVal;
+                    } else {
+                        el.textContent = '';
                     }
                 }
             }
