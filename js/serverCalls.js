@@ -16,50 +16,65 @@ function delay(ms) {
 
 class ServerConnection {
     constructor() {
+        this.settings = this.defineSettings();
         this.settings.watch(false, ()=> this.updateSettings() );
     }
     // accessToken;
+    settings = {}
+    defineSettings = () => {
+        return {
+            immutableList: ['immutableList', 'watchList', 'watchAll', 'watch', 'clear', 'set', 'get'],
+            watchList: {},
+            watchAll: [], // List of all functions to run whenever a value is set in settings
+            watch: (key, run) => { // this is only a shallow watch
+                if (!key) return this.settings.watchAll.push(run);
+                watchList[key] = watchList[key] ? [...watchList[key], run] : [run]; // for a give property to watch attach a function and if there is another function tied to the property we are watching continue adding functions so that they all can run when the value is updated
+            },
+            clear: (key) => {
+                if ( this.settings.immutableList.includes(key) ) throw new Error(`Property ${key} is not mutable and thus cannot be changed`); 
 
-    settings = {
-        immutableList: ['immutableList', 'watchList', 'watchAll', 'watch', 'set', 'get'],
-        watchList: {},
-        watchAll: [], // List of all functions to run whenever a value is set in settings
-        watch: (key, run) => { // this is only a shallow watch
-            if (!key) return this.settings.watchAll.push(run);
-            watchList[key] = watchList[key] ? [...watchList[key], run] : [run]; // for a give property to watch attach a function and if there is another function tied to the property we are watching continue adding functions so that they all can run when the value is updated
-        },
-        set: (key, newValue) => { // Should this be an async function? Maybe so incase you want to keep the function going... but I think you can decide that with the function passed into the watch function
-            if ( this.settings.immutableList.includes(key) ) throw new Error(`Property ${key} is not mutable and thus cannot be changed`); 
-            let oldValue = this.settings[key];
-            this.settings[key] = newValue;
+                if (!key) {
+                    this.settings = this.defineSettings();
+                    this.settings.watch(false, ()=> this.updateSettings() );
+                } else {
+                    this.settings.set(key, undefined)
+                }
+            },
+            set: (key, newValue) => { // Should this be an async function? Maybe so incase you want to keep the function going... but I think you can decide that with the function passed into the watch function
+                if ( this.settings.immutableList.includes(key) ) throw new Error(`Property ${key} is not mutable and thus cannot be changed`); 
+                let oldValue = this.settings[key];
+                this.settings[key] = newValue;
 
-            this.settings.watchAll.forEach(func => func(newValue, oldValue)); // this will run any function that is added to the watchAll array
-            this.settings.watchList[key]?.forEach(func => func(newValue, oldValue) );// Run each function that is tied to that key
-            
-        },
-        get: (key) => { 
-            if (Array.isArray(key)) { // If someone passes in an array
-                let currentObj = this.settings
-                key.forEach(path => {
-                    if (currentObj !== undefined) {
-                        currentObj = currentObj[path];
-                    }
-                });
-                return currentObj
-            } else if (key.includes('.')) {
-                let pathing = key.split('.')
-                return this.settings.get(pathing);
-            } else {
-                return this.settings[key] 
+                this.settings.watchAll.forEach(func => func(newValue, oldValue)); // this will run any function that is added to the watchAll array
+                this.settings.watchList[key]?.forEach(func => func(newValue, oldValue) );// Run each function that is tied to that key
+                
+            },
+            get: (key) => { 
+                if (Array.isArray(key)) { // If someone passes in an array
+                    let currentObj = this.settings
+                    key.forEach(path => {
+                        if (currentObj !== undefined) {
+                            currentObj = currentObj[path];
+                        }
+                    });
+                    return currentObj
+                } else if (key.includes('.')) {
+                    let pathing = key.split('.')
+                    return this.settings.get(pathing);
+                } else {
+                    return this.settings[key] 
+                }
             }
-        }
-    };
+        };
+    }
     
     updateSettings = (element) => { // TODO: At some point I need to have this function reference the original HTML and then update a copy of it, rather than updating the original because otherwise I lose where the original had the dynamic fields...
         let allElements = []; 
-        allElements = !!element ? 
-            [...element.querySelectorAll(".dynamic")] : 
-            [...viewManager.templateHTML(viewManager.view().name).querySelectorAll(".dynamic")];
+        let parentElement = !!element ? 
+        element : 
+        viewManager.templateHTML(viewManager.view().name, 'original');
+
+        allElements = [...parentElement.querySelectorAll(".dynamic")];
 
         allElements.forEach(el => {
             if (el.nodeName === 'INPUT') {
@@ -74,7 +89,9 @@ class ServerConnection {
                         
                         el.value = newVal;
                     } else {
-                        el.value = '';
+                        let newVal = el.value.replace(match[0], '');
+                        
+                        el.value = newVal;
                     }
                 }
             } else {
@@ -89,11 +106,17 @@ class ServerConnection {
                         
                         el.textContent = newVal;
                     } else {
-                        el.textContent = '';
+                        let newVal = el.textContent.replace(match[0], '');
+                        
+                        el.textContent = newVal;
                     }
                 }
             }
         });
+        if (!element) {
+            viewManager.templateHTML(viewManager.view().name, false, parentElement.children);
+            viewManager.refreshView();
+        }
     };
     
     send = async function(request, ...params) {
@@ -275,7 +298,7 @@ class ServerConnection {
     logout = async () => {
 
         const response = await fetch(BASE_URL() + 'logout', this.setReqParams('GET-auth'));
-        if (response.ok) this.settings = {};
+        if (response.ok) this.settings.clear();
         return response;
     }
 

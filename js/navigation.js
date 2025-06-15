@@ -13,7 +13,8 @@ function insertHeaderNav(parentElement) {
     let firstChild = parent.firstElementChild
     navbar.querySelector('.logout-btn').addEventListener('click', async () => {
         await API.send('logout');
-       
+        // navbar.remove();
+        document.querySelector('header').remove();
         viewManager.redirect('login');
     })
     if (firstChild.tagName === 'HEADER') {
