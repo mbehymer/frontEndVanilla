@@ -4,7 +4,8 @@ let loader = {
         let body = document.querySelector('body');
         let loadContainer = document.createElement('div');
         loadContainer.innerHTML = `
-        <div class="spinner">
+        <div class="infinity-loader-bar">
+            <div class="infinity-loader-cover"></div>
         </div>
         `;
         loadContainer.classList.add('spinner-container');

@@ -25,3 +25,60 @@
     from {transform: perspective(100cm) rotateZ(0deg);}
     to {transform: perspective(100cm) rotateZ(359deg);}
 }
+
+
+
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+#demo-container {
+    padding: 1rem;
+}
+
+.infinity-loader-bar {
+    /* position: absolute; */
+    border: 8px solid #fff;
+    border-right: 8px solid #2255aa;
+    width: 50px;
+    height: 50px;
+    border-radius: 100px 100px 100px 100px;
+    /* transform: rotateZ(-45deg); */
+    animation: spin-clockwise 1s  ease-in-out 0s infinite;
+    /* margin-right:-4px; */
+    background: #FFF;
+}
+
+.infinity-loader-cover {
+    border-top: 10px solid #ffffff33;
+    border-right: 10px solid #ffffff33;
+    width: 24.5px;
+    height: 24.5px;
+    background: #ffffff;
+    /* border-radius: 100px 100px 100px 100px; */
+    /* transform: rotateZ(-45deg); */
+    animation: spin-clockwise-inside 1s ease-in-out 0s infinite;
+    /* margin-left: -4px; */ 
+    transform-origin: 0.5px 34.5px;
+    transform: rotateZ(180deg);
+    position: absolute;
+    top: -9.5px;
+    left: 24.5px;
+    border-radius: 0 100px 0 0;
+    z-index: 1;
+}
+
+@keyframes spin-clockwise {
+    0% {transform: rotateZ(-45deg);}
+    /* 75% {transform: rotateZ(675deg);} */
+    100% {transform: rotateZ(675deg);}
+}
+
+@keyframes spin-clockwise-inside {
+    0% {transform: rotateZ(45deg);}
+    25%  {transform: rotateZ(0deg);}
+    75% {transform: rotateZ(0deg);}
+    100% {transform: rotateZ(45deg);}
+}
