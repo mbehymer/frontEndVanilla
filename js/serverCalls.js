@@ -77,7 +77,7 @@ class ServerConnection {
         allElements = [...parentElement.querySelectorAll(".dynamic")];
 
         allElements.forEach(el => {
-            if (el.nodeName === 'INPUT') {
+            if (el.nodeName === 'INPUT' || el.nodeName === 'TEXTAREA') {
                 const matches = el.value.matchAll(/{{(.*?)}}/g)
                 for (const match of matches) {
                     let val = this.settings.get(match[1]);
@@ -88,10 +88,12 @@ class ServerConnection {
                         let newVal = el.value.replace(match[0], val);
                         
                         el.value = newVal;
+                        el.dispatchEvent(new Event('input', { bubbles: true })); // trigger any event listeners tied to this element
                     } else {
                         let newVal = el.value.replace(match[0], '');
                         
                         el.value = newVal;
+                        el.dispatchEvent(new Event('input', { bubbles: true }));
                     }
                 }
             } else {
