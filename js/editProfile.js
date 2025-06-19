@@ -105,7 +105,17 @@ function editProfileCtrl() {
                         "objType": "field",
                         "type": "textarea",
                         "objDepth": 2
-                    }
+                    },
+                    
+                    {
+                        "displayOrder": 4,
+                        "id": "submit",
+                        "label": "Submit",
+                        "valueType": "submit",
+                        "objType": "button",
+                        "type": "button",
+                        "objDepth": 2
+                    },
                 ],
                 "objType": "container",
                 "objDepth": 0
