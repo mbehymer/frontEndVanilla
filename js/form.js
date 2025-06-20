@@ -5,17 +5,28 @@ class Form {
             // console.log(mutationsList); // Process the changes here
             this.updateFormData(mutationsList.target);
         });
-        if (type === 'object') {
-            this.formHTML = this.loadObject(form);
-            API.updateSettings(this.formHTML);
-        } else if (type === 'fileName') {
-            loadFile(form)
-        }
+        
+        // this.getFormHTML(form, type); // FINISH THIS - Add ability to pass in an onload function
     }
 
     observer;
     form = {};
     formHTML;
+    formRequests = {};
+    getFormHTML = async (form, type) => {
+        let requests = Object.entries(this.formRequests);
+        if (!form && requests.length) return {ok: true};
+        if (type === 'object') {
+            // this.formRequests = Promise(this.loadObject(form));
+            this.formHTML = await new Promise(this.loadObject(form));
+            API.updateSettings(this.formHTML);
+            return {ok: true};
+        } else if (type === 'file') {
+            this.formHTML = await this.loadFile(form);
+            API.updateSettings(this.formHTML);
+            return {ok: true};
+        }
+    }
 
     loadObject = (formObj) => {
         // let groupedItems = [];
@@ -60,7 +71,7 @@ class Form {
             child.addEventListener("input",  event => this.updateFormData(event.target));
 
         } else if (field.type = 'textarea') {
-            div.innerHTML = `<textarea id="${field.id}" class="dynamic">{{user.${field.id}}}</textarea>`;
+            div.innerHTML = `<label for="${field.id}">${field.label}</label><textarea id="${field.id}" class="dynamic">{{user.${field.id}}}</textarea>`;
             
             let child = div.querySelector('textarea');;
             let config = { 
@@ -82,8 +93,10 @@ class Form {
         this.form.user[field.id] = field.value;
     }
 
-    loadFile = (file) => {
-        
+    loadFile = async (path) => {
+        let file = await fetch(path)
+        let obj = await file.json();
+        return this.loadObject(obj);
     }
 
     // connectElements = (listOfElements) {

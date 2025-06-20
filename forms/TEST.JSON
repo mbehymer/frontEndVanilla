@@ -15,7 +15,6 @@
                     "valueType": "text",
                     "objType": "field",
                     "type": "input",
-                    "classes": "",
                     "objDepth": 2
                 },
                 {
@@ -25,11 +24,9 @@
                     "valueType": "text",
                     "objType": "field",
                     "type": "input",
-                    "classes": "",
                     "objDepth": 2
                 }
             ],
-            "classes": "",
             "objDepth": 1
         },
         {
@@ -43,7 +40,6 @@
                     "valueType": "text",
                     "objType": "field",
                     "type": "input",
-                    "classes": "",
                     "objDepth": 2
                 },
                 {
@@ -53,11 +49,9 @@
                     "valueType": "tel",
                     "objType": "field",
                     "type": "input",
-                    "classes": "",
                     "objDepth": 2
                 }
             ],
-            "classes": "",
             "objDepth": 1
         },
         {
@@ -67,9 +61,9 @@
             "valueType": "text",
             "objType": "field",
             "type": "textarea",
-            "classes": "",
             "objDepth": 2
-        },       
+        },
+        
         {
             "displayOrder": 4,
             "id": "submit",
@@ -81,6 +75,5 @@
         }
     ],
     "objType": "container",
-    "classes": "",
     "objDepth": 0
 }
