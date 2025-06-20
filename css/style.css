@@ -186,8 +186,15 @@ body:has(.modal-backdrop) {
     gap: 1rem;
 }
 
+/************ Form Styles ************/
+.form-element-container {
+    padding: 0.25rem;
+    display: flex;
+    flex-direction: column;
+}
 
-/* Login Page */
+
+/********** Login Page ***********/
 
 
 #login-container {
