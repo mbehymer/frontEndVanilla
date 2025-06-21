@@ -77,7 +77,9 @@
             "valueType": "submit",
             "objType": "button",
             "type": "button",
-            "objDepth": 2
+            "objDepth": 2,
+            "actionContainer": "API",
+            "action": "updateUserInfo"
         }
     ],
     "objType": "container",
