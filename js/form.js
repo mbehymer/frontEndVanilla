@@ -4,6 +4,7 @@ class Form {
             // console.log('field ID:', field.id);
             // console.log(mutationsList); // Process the changes here
             this.updateFormData(mutationsList.target);
+
         });
         
         // this.getFormHTML(form, type); // FINISH THIS - Add ability to pass in an onload function
@@ -48,7 +49,15 @@ class Form {
                             // item.action
                             // submit data
                             if (item.valueType === 'submit') {
-                                console.log(this.form);
+                                if (item.actionContainer === 'API') {
+                                    API.send(item.action, this.form.user).then(res => {
+                                        if (res.ok) {
+                                            quickMessage('Submission Successful', {time: 5000, enabled: true});
+                                        } else {
+                                            quickMessage('Submission Unsuccessful', {time: 5000, enabled: true}, 'error');
+                                        }
+                                    })
+                                }
                             }
                             
                         }
@@ -98,6 +107,7 @@ class Form {
         let obj = await file.json();
         return this.loadObject(obj);
     }
+
 
     // connectElements = (listOfElements) {
 
