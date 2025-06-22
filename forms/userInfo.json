@@ -78,8 +78,19 @@
             "objType": "button",
             "type": "button",
             "objDepth": 2,
-            "actionContainer": "API",
-            "action": "updateUserInfo"
+            "actionInfo": {
+                "action": "send",
+                "params": [
+                    {
+                        "type": "literal",
+                        "value": "updateUserInfo"
+                    },
+                    {
+                        "type": "self",
+                        "value": "form.user"
+                    }
+                ]
+            }
         }
     ],
     "objType": "container",
