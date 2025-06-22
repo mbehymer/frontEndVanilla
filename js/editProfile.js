@@ -122,6 +122,7 @@ function editProfileCtrl() {
             // }, 'object');
             
             let form = new Form();
+            form.loadAvailableFunctions(...[{parent: API, func: API.send}]);
             form.getFormHTML('forms/userInfo.json', 'file').then(res => {
                 if (res.ok) {
                     document.querySelector('#info-form').replaceChildren(...[form.formHTML]);

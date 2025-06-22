@@ -14,6 +14,16 @@ class Form {
     form = {};
     formHTML;
     formRequests = {};
+    availableFunctions = {}
+    
+
+    _isAsync = (func) => {
+        const AsyncFunction = (async () => {}).constructor;
+        const GeneratorFunction = (function* () {}).constructor;
+
+        return (func instanceof AsyncFunction && AsyncFunction !== Function && AsyncFunction !== GeneratorFunction) === true
+    }
+
     getFormHTML = async (form, type) => {
         let requests = Object.entries(this.formRequests);
         if (!form && requests.length) return {ok: true};
@@ -29,6 +39,32 @@ class Form {
         }
     }
 
+    loadAvailableFunctions = (...functions) => {
+        functions.forEach(funcObj => {
+            this.availableFunctions[funcObj.func.name] = funcObj;
+        })
+    }
+
+    _parseParams = (...params) => {
+        let parsedParams = []
+        params.forEach(param => {
+            if (param.type === 'self') { 
+                let value = this;
+
+                if (param.value.length !== '') { // if this is a specific field within the Form (because self is refering to the form), then we will need to find the specific value
+                    param.value.split('.').forEach(path => {
+                        value = value[path];
+                    })
+                }
+                parsedParams.push(value);
+                // parsedParams.push(param.value.length === '' ? this : this[param.value]);
+            } else {
+                parsedParams.push(param.value);
+            }
+        })
+        return parsedParams;
+    }
+
     loadObject = (formObj) => {
         // let groupedItems = [];
         let container = document.createElement('div');
@@ -41,16 +77,21 @@ class Form {
                         container.appendChild(this.generateField(item));
                     } else if (item.objType === "container") {
                         container.appendChild(this.loadObject(item));
-                    } else if (item.objType === 'button') {
+                    } else if (item.objType === 'button') { // if the type of object is 'button' then set things up so that it can pass in the action
                         let btn = document.createElement('button');
                         btn.classList.add('btn', 'btn-primary');
                         btn.innerText = item.label;
                         btn.onclick = () => {
-                            // item.action
+                            
                             // submit data
                             if (item.valueType === 'submit') {
-                                if (item.actionContainer === 'API') {
-                                    API.send(item.action, this.form.user).then(res => {
+                                // if (item.actionContainer === 'API') {
+                                let funcObj = this.availableFunctions[item.actionInfo.action]
+                                let func = funcObj.func;
+                                let isAsync = this._isAsync(funcObj.func);
+
+                                if (isAsync) {
+                                    func(...this._parseParams(...item.actionInfo.params)).then(res => { // Finish setting this up. I should pass in functions that are possible when I create the form.
                                         if (res.ok) {
                                             quickMessage('Submission Successful', {time: 5000, enabled: true});
                                         } else {

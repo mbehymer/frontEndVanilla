@@ -121,7 +121,7 @@ class ServerConnection {
         }
     };
     
-    send = async function(request, ...params) {
+    send = async (request, ...params) => {
 
         // let oldSettings = JSON.stringify(this.settings);
         
