@@ -11,7 +11,10 @@ class Form {
     }
 
     observer;
-    form = {};
+    form = {
+        settings: {},
+        data: {}
+    };
     formHTML;
     formRequests = {};
     availableFunctions = {}
@@ -67,6 +70,11 @@ class Form {
 
     loadObject = (formObj) => {
         // let groupedItems = [];
+        if (formObj.settings && formObj.settings.dataName) {
+            this.form.settings = formObj.settings;
+        }
+
+
         let container = document.createElement('div');
         container.classList.add(...["form-element-container", `form-element-order-${formObj.displayOrder}`]);
         Object.entries(formObj).forEach(([key, value]) => {
@@ -86,7 +94,7 @@ class Form {
                             // submit data
                             if (item.valueType === 'submit') {
                                 // if (item.actionContainer === 'API') {
-                                let funcObj = this.availableFunctions[item.actionInfo.action]
+                                let funcObj = this.availableFunctions[item.actionInfo.action] // These functions come from the form data that was passed in. The functions must also exist in the code and be available to the form.
                                 let func = funcObj.func;
                                 let isAsync = this._isAsync(funcObj.func);
 
@@ -115,22 +123,30 @@ class Form {
         let div = document.createElement('div');
         div.classList.add(...["form-element-container", `form-element-order-${field.displayOrder}`]);
         if (field.type === 'input') {
-            div.innerHTML = `<label for="${field.id}">${field.label}</label><input id="${field.id}"  class="dynamic" type="${field.valueType}" value="{{user.${field.id}}}">`;
+            div.innerHTML = `<label for="${field.id}">${field.label}</label>
+            <input 
+            id="${field.id}"  
+            class="${field.classes}" 
+            type="${field.valueType}" 
+            value="${field.classes.includes('dynamic') ? '{{' : ''}${this.form.settings.dataName}.${field.id}${field.classes.includes('dynamic') ? '}}' : ''}">`;
             
             let child = div.querySelector('input');
             child.addEventListener("input",  event => this.updateFormData(event.target));
 
         } else if (field.type = 'textarea') {
-            div.innerHTML = `<label for="${field.id}">${field.label}</label><textarea id="${field.id}" class="dynamic">{{user.${field.id}}}</textarea>`;
+            div.innerHTML = `<label for="${field.id}">${field.label}</label>
+            <textarea id="${field.id}" 
+            class="${field.classes}"
+            >${field.classes.includes('dynamic') ? '{{' : ''}${this.form.settings.dataName}.${field.id}${field.classes.includes('dynamic') ? '}}' : ''}</textarea>`;
             
-            let child = div.querySelector('textarea');;
-            let config = { 
-                childList: true, 
-                characterData: true, 
-                attributes: true 
+            let child = div.querySelector('textarea'); 
+            let config = { // This config sets what the observer is looking for changes in the DOM
+                childList: true, // Did the children in an observed element change?
+                characterData: true,  // Did the innerText or innerContent change
+                attributes: true  // Did any of the attributes change? This does not mean did the property, like value, change.
             };
-            this.observer.observe(child, config);
-            child.addEventListener("input", event => this.updateFormData(event.target));
+            this.observer.observe(child, config); // Watch if anything on that element changes
+            child.addEventListener("input", event => this.updateFormData(event.target)); // If the input is updated, update the form data
         }
         console.log(div.innerHTML);
         
@@ -139,8 +155,8 @@ class Form {
     }
 
     updateFormData = (field) => {
-        if (!this.form.user) this.form.user = {};
-        this.form.user[field.id] = field.value;
+        if (!this.form.data) this.form.data = {};
+        this.form.data[field.id] = field.value;
     }
 
     loadFile = async (path) => {
