@@ -1,6 +1,6 @@
 {
     "settings": {
-        "dataName": "user"
+        "dataName": "character"
     },
     "displayOrder": 0,
     "items": [
@@ -10,22 +10,22 @@
             "items": [
                 {
                     "displayOrder": 1,
-                    "id": "firstName",
-                    "label": "First Name",
+                    "id": "health",
+                    "label": "Health",
                     "valueType": "text",
                     "objType": "field",
                     "type": "input",
-                    "classes": "dynamic",
+                    "classes": "",
                     "objDepth": 2
                 },
                 {
                     "displayOrder": 2,
-                    "id": "lastName",
-                    "label": "Last Name",
-                    "valueType": "text",
+                    "id": "level",
+                    "label": "Level",
+                    "valueType": "number",
                     "objType": "field",
                     "type": "input",
-                    "classes": "dynamic",
+                    "classes": "",
                     "objDepth": 2
                 }
             ],
@@ -38,12 +38,12 @@
             "items": [
                 {
                     "displayOrder": 1,
-                    "id": "favoriteColor",
-                    "label": "Favorite Color",
-                    "valueType": "text",
+                    "id": "power",
+                    "label": "Power",
+                    "valueType": "number",
                     "objType": "field",
                     "type": "input",
-                    "classes": "dynamic",
+                    "classes": "",
                     "objDepth": 2
                 },
                 {
@@ -53,7 +53,7 @@
                     "valueType": "tel",
                     "objType": "field",
                     "type": "input",
-                    "classes": "dynamic",
+                    "classes": "",
                     "objDepth": 2
                 }
             ],
@@ -62,14 +62,32 @@
         },
         {
             "displayOrder": 3,
-            "id": "note",
-            "label": "Notes",
-            "valueType": "text",
-            "objType": "field",
-            "type": "textarea",
-            "classes": "dynamic",
-            "objDepth": 2
-        },       
+            "objType": "container",
+            "items": [
+                {
+                    "displayOrder": 1,
+                    "id": "weapon.power",
+                    "label": "Power",
+                    "valueType": "number",
+                    "objType": "field",
+                    "type": "input",
+                    "classes": "",
+                    "objDepth": 2
+                },
+                {
+                    "displayOrder": 2,
+                    "id": "weapon.name",
+                    "label": "Phone Number",
+                    "valueType": "tel",
+                    "objType": "field",
+                    "type": "input",
+                    "classes": "",
+                    "objDepth": 2
+                }
+            ],
+            "classes": "",
+            "objDepth": 1
+        },
         {
             "displayOrder": 4,
             "id": "submit",
@@ -77,18 +95,17 @@
             "valueType": "submit",
             "objType": "button",
             "type": "button",
-            "classes": "",
             "objDepth": 2,
             "actionInfo": {
                 "action": "send",
                 "params": [
                     {
                         "type": "literal",
-                        "value": "updateUserInfo"
+                        "value": "createCharacter"
                     },
                     {
                         "type": "self",
-                        "value": "form.user"
+                        "value": "form.character"
                     }
                 ]
             }

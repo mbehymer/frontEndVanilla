@@ -77,6 +77,7 @@ class ServerConnection {
         allElements = [...parentElement.querySelectorAll(".dynamic")];
 
         allElements.forEach(el => {
+
             if (el.nodeName === 'INPUT' || el.nodeName === 'TEXTAREA') {
                 const matches = el.value.matchAll(/{{(.*?)}}/g)
                 for (const match of matches) {
@@ -115,7 +116,7 @@ class ServerConnection {
                 }
             }
         });
-        if (!element) {
+        if (!element && allElements.length) {
             viewManager.templateHTML(viewManager.view().name, false, parentElement.children);
             viewManager.refreshView();
         }
