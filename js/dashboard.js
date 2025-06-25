@@ -315,6 +315,13 @@ dashboardCtrl = () => {
         API.send('grabRefreshToken')
         .then(response => {
             if (response.ok) {
+                let form = new Form();
+                form.loadAvailableFunctions(...[{parent: API, func: API.send}]);
+                form.getFormHTML('forms/characterForm.json', 'file').then(res => {
+                        if (res.ok) {
+                            document.querySelector('#character-form').replaceChildren(...[form.formHTML]);
+                        }
+                    });
                 return API.send('getUserInfo');
             } else {
                
