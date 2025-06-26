@@ -30,3 +30,13 @@ and this is added when a controller for the template page runs. It goes into a f
 I don't want to add the form update logic to the function that updates the dynamic fields as I feel like it's purpose is mainly for adding data to dynamic fields.
 <!-- 
 One thought for what I could do is add a property to components such that when the template file is grabbed it will add those to a list that upda -->
+##### Option 1
+Here is what I'm thinking at the moment. I think I could do something like this. I would have an object for each dynamic element, the ones with {{...}}. Using that I would have two versions of the html element. One would be the original un altered html element, and the other would be the element that gets updated and displayed. 
+
+```json
+{
+    "originalElement": "<div>{{...}}</div>", // This would not be a string, but the actual reference to the element
+    "updatedElement": "<div>Updated element with dynamic text</div>" // This would be the element that gets updated and displayed
+}
+```
+How this would work is the code would receive an update to the object settings, then it would look at all of the objects, it would probably be a list, and it would check the originalElement to see if it has data that needs to be updated according to the changes that were made. If so it would copy the innerText of the element and update it, then update the updatedElement with the new innerHTML. This would mean we could update each different element, without replacing the whole existing HTML elements.
