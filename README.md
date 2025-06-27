@@ -40,3 +40,6 @@ Here is what I'm thinking at the moment. I think I could do something like this.
 }
 ```
 How this would work is the code would receive an update to the object settings, then it would look at all of the objects, it would probably be a list, and it would check the originalElement to see if it has data that needs to be updated according to the changes that were made. If so it would copy the innerText of the element and update it, then update the updatedElement with the new innerHTML. This would mean we could update each different element, without replacing the whole existing HTML elements.
+
+##### Option 2
+Another idea, which isn't fully flushed out is that I could have everything load in a list, then store the values of the loaded components in their own lists and only update the lists that need to be updated, like the ones that have dynamic regions. Where I would setup that would probably be part of the template manager
