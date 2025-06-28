@@ -43,3 +43,6 @@ How this would work is the code would receive an update to the object settings, 
 
 ##### Option 2
 Another idea, which isn't fully flushed out is that I could have everything load in a list, then store the values of the loaded components in their own lists and only update the lists that need to be updated, like the ones that have dynamic regions. Where I would setup that would probably be part of the template manager
+
+##### Option 3
+I don't like this option, but I could have each of the components re-render each time a dynamic field is updated. I feel like this would use way to many resources and be excessive, doing more than it needs to.
