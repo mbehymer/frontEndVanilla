@@ -70,56 +70,63 @@ class ServerConnection {
     
     updateSettings = (element) => { // TODO: At some point I need to have this function reference the original HTML and then update a copy of it, rather than updating the original because otherwise I lose where the original had the dynamic fields...
         let allElements = []; 
-        let parentElement = !!element ? 
-        element : 
-        viewManager.templateHTML(viewManager.view().name, 'original');
+        // let parentElement = !!element ? 
+        // element : 
+        // viewManager.templateHTML(viewManager.view().name, 'dynamic');
+        let isSingleUpdate = !!element;
 
-        allElements = [...parentElement.querySelectorAll(".dynamic")];
+        allElements = isSingleUpdate ? 
+            [...element.querySelectorAll(".dynamic")].map( dynamic => {
+                return {
+                    'originalElement': dynamic,
+                    'updatedElement': dynamic
+                }
+            }) : 
+            viewManager.templateHTML(viewManager.view().name, 'dynamic', false);
 
         allElements.forEach(el => {
+            let orginal = el.originalElement;
+            let toUpdate = el.updatedElement;
+            if (orginal.nodeName === 'INPUT' || orginal.nodeName === 'TEXTAREA') {
+                
+                let value = orginal.value; // use this so that we are able to update multiple times of dynamic interpolation like <input value="{{...}} {{...}}>"
+                const matches = value.matchAll(/{{(.*?)}}/g)
+                for (const match of matches) {
+                    let val = this.settings.get(match[1]);
+                    if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
+                        val = JSON.stringify(val);
+                    } 
+                    if ( val ) {
+                        value = value.replace(match[0], val);
+                    } else {
+                        value = value.replace(match[0], '');
+                        
+                    }
+                }
 
-            if (el.nodeName === 'INPUT' || el.nodeName === 'TEXTAREA') {
-                const matches = el.value.matchAll(/{{(.*?)}}/g)
-                for (const match of matches) {
-                    let val = this.settings.get(match[1]);
-                    if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
-                        val = JSON.stringify(val);
-                    } 
-                    if ( val ) {
-                        let newVal = el.value.replace(match[0], val);
-                        
-                        el.value = newVal;
-                        el.dispatchEvent(new Event('input', { bubbles: true })); // trigger any event listeners tied to this element
-                    } else {
-                        let newVal = el.value.replace(match[0], '');
-                        
-                        el.value = newVal;
-                        el.dispatchEvent(new Event('input', { bubbles: true }));
-                    }
-                }
+                toUpdate.value = value;
+                toUpdate.dispatchEvent(new Event('input', { bubbles: true })); // trigger any event listeners tied to this element
             } else {
-                const matches = el.textContent.matchAll(/{{(.*?)}}/g)
+                let textContent = orginal.textContent; // use this so that we are able to update multiple times of dynamic interpolation like <div>{{...}} {{...}}</div>"
+                const matches = textContent.matchAll(/{{(.*?)}}/g)
                 for (const match of matches) {
                     let val = this.settings.get(match[1]);
                     if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
                         val = JSON.stringify(val);
                     } 
                     if ( val ) {
-                        let newVal = el.textContent.replace(match[0], val);
-                        
-                        el.textContent = newVal;
+                        textContent = textContent.replace(match[0], val);
                     } else {
-                        let newVal = el.textContent.replace(match[0], '');
-                        
-                        el.textContent = newVal;
+                        textContent = textContent.replace(match[0], '');
                     }
                 }
+                toUpdate.textContent = textContent;
             }
         });
-        if (!element && allElements.length) {
-            viewManager.templateHTML(viewManager.view().name, false, parentElement.children);
-            viewManager.refreshView();
-        }
+        // if (!element && allElements.length) {
+        //     viewManager.templateHTML(viewManager.view().name, false, parentElement.children);
+        //     viewManager.refreshView();
+        // }
     };
     
     send = async (request, ...params) => {
