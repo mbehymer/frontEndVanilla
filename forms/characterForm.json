@@ -10,8 +10,8 @@
             "items": [
                 {
                     "displayOrder": 1,
-                    "id": "health",
-                    "label": "Health",
+                    "id": "name",
+                    "label": "Name",
                     "valueType": "text",
                     "objType": "field",
                     "type": "input",
@@ -20,6 +20,16 @@
                 },
                 {
                     "displayOrder": 2,
+                    "id": "health",
+                    "label": "Health",
+                    "valueType": "number",
+                    "objType": "field",
+                    "type": "input",
+                    "classes": "",
+                    "objDepth": 2
+                },
+                {
+                    "displayOrder": 3,
                     "id": "level",
                     "label": "Level",
                     "valueType": "number",
@@ -45,16 +55,6 @@
                     "type": "input",
                     "classes": "",
                     "objDepth": 2
-                },
-                {
-                    "displayOrder": 2,
-                    "id": "phoneNumber",
-                    "label": "Phone Number",
-                    "valueType": "tel",
-                    "objType": "field",
-                    "type": "input",
-                    "classes": "",
-                    "objDepth": 2
                 }
             ],
             "classes": "",
@@ -67,7 +67,7 @@
                 {
                     "displayOrder": 1,
                     "id": "weapon.power",
-                    "label": "Power",
+                    "label": "Weapon Power",
                     "valueType": "number",
                     "objType": "field",
                     "type": "input",
@@ -77,7 +77,7 @@
                 {
                     "displayOrder": 2,
                     "id": "weapon.name",
-                    "label": "Phone Number",
+                    "label": "Weopon Name",
                     "valueType": "tel",
                     "objType": "field",
                     "type": "input",

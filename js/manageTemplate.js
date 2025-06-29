@@ -31,8 +31,8 @@ class ViewManager {
             })
             .then(file => {
                 let main = document.querySelector('main'); // At some point this should be changed so that it doesn't use the body, but rather gets put into whatever parent container it was requested for... So it could be part of a template.
-                
-                main.innerHTML = this.templateHTML(this.view().name, false, file).innerHTML;
+                this.templateHTMLSetValue(this.view().name, file);
+                main.replaceChildren(...[this.templateHTML(this.view().name, 'updated')]);//main.innerHTML = this.templateHTML(this.view().name, false, file).innerHTML;
                 this.view().run();
             })
         } catch (err) {
@@ -40,18 +40,18 @@ class ViewManager {
         }
     }
 
-    refreshView() {
-        try {
-            if (!this.view()) this.redirect('login');
+    // refreshView() {
+    //     try {
+    //         if (!this.view()) this.redirect('login');
            
-            let main = document.querySelector('main'); // At some point this should be changed so that it doesn't use the body, but rather gets put into whatever parent container it was requested for... So it could be part of a template.
+    //         let main = document.querySelector('main'); // At some point this should be changed so that it doesn't use the body, but rather gets put into whatever parent container it was requested for... So it could be part of a template.
             
-            main.replaceChildren(...[this.templateHTML(this.view().name)]);
-            // this.view().run();
-        } catch (err) {
-            console.error('loadView:', this.view(), 'Error:', err);
-        }
-    }
+    //         //main.replaceChildren(...[this.templateHTML(this.view().name)]);
+    //         // this.view().run();
+    //     } catch (err) {
+    //         console.error('loadView:', this.view(), 'Error:', err);
+    //     }
+    // }
 
     params = () => { return location.search.replace('?','').split('&').map(search => {
             let pair = search.split('=');
@@ -71,34 +71,62 @@ class ViewManager {
 
 
     templateHTMLList = {}; // This is to store the original versions of the HTML
-
-    templateHTML = (key, type, value) => {
-        if (this.templateHTMLList[key] === undefined) this.templateHTMLList[key] = {};
-        if (!value) {
-            return type === 'original' ? 
-            this.templateHTMLList[key]['original'].cloneNode(true) : 
-            this.templateHTMLList[key]['updated'];//.innerHTML; // I don't know that this will really be all that useful to clone and only send the innerHTML seems like cloning is pointless...
-        }
-
+    templateHTMLSetValue = (key, value) => {
         let container = document.createElement('div');
-        if (this.isElement(value)) {
-            container.appendChild(value);
-        } else if (this.isHTMLCollection(value)) {
-            container.replaceChildren(...value)
-        } else {
-            container.innerHTML = value;
-        }
-        if (this.templateHTMLList[key]['original'] === undefined) {
-            this.templateHTMLList[key]['original'] = container;
-        }
-        
-        if (this.templateHTMLList[key]['updated'] === undefined) {
-            this.templateHTMLList[key]['updated'] = container.cloneNode(true);
-        } else {
-            this.templateHTMLList[key]['updated'].replaceChildren(...container.children); // this is important so that we always keep the same nod as that will be the reference
-        }
-        return this.templateHTML(key); // This just executes the first line of this function so I don't have to repeat it...
+        container.innerHTML = value;
+        this.templateHTMLList[key] = {
+            'original': container.cloneNode(true),
+            'updated': container,
+            'dynamic': [...container.querySelectorAll('.dynamic')].map( dynamic => {
+                return {
+                    'originalElement': dynamic.cloneNode(true),
+                    'updatedElement': dynamic
+                }
+            })
+        };
     }
+
+    templateHTML = (key, type) => {
+        if (this.templateHTMLList[key] === undefined) throw Error(`Missing value for ${key}`);
+        switch (type) {
+            case 'original' :
+                return this.templateHTMLList[key]['original'].cloneNode(true);
+                break;
+            case 'updated' :
+                return this.templateHTMLList[key]['updated'];
+                break;
+            case 'dynamic' :
+            default: 
+                if (this.templateHTMLList[key]['dynamic'] === undefined) throw Error(`Missing value for ${key} in the dynamic fields`);
+                return this.templateHTMLList[key]['dynamic']
+        }
+        // if (!value) {
+        //     return type === 'original' ? 
+        //     this.templateHTMLList[key]['original'].cloneNode(true) : 
+        //     this.templateHTMLList[key]['updated'];//.innerHTML; // I don't know that this will really be all that useful to clone and only send the innerHTML seems like cloning is pointless...
+        // }
+
+        // let container = document.createElement('div');
+        // if (this.isElement(value)) {
+        //     container.appendChild(value);
+        // } else if (this.isHTMLCollection(value)) {
+        //     container.replaceChildren(...value)
+        // } else {
+        //     container.innerHTML = value;
+        // }
+        // if (this.templateHTMLList[key]['original'] === undefined) {
+        //     this.templateHTMLList[key]['original'] = container;
+        // }
+        
+        // if (this.templateHTMLList[key]['updated'] === undefined) {
+        //     this.templateHTMLList[key]['updated'] = container.cloneNode(true);
+        // } else {
+        //     this.templateHTMLList[key]['updated'].replaceChildren(...container.children); // this is important so that we always keep the same nod as that will be the reference
+        // }
+        // return this.templateHTML(key); // This just executes the first line of this function so I don't have to repeat it...
+    }
+
+    
 
 
    

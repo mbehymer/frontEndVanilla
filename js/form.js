@@ -128,7 +128,7 @@ class Form {
             id="${field.id}"  
             class="${field.classes}" 
             type="${field.valueType}" 
-            value="${field.classes.includes('dynamic') ? '{{' : ''}${this.form.settings.dataName}.${field.id}${field.classes.includes('dynamic') ? '}}' : ''}">`;
+            value="${field.classes.includes('dynamic') ? `{{${this.form.settings.dataName}.${field.id}}}` : ''}">`;
             
             let child = div.querySelector('input');
             child.addEventListener("input",  event => this.updateFormData(event.target));
@@ -137,7 +137,7 @@ class Form {
             div.innerHTML = `<label for="${field.id}">${field.label}</label>
             <textarea id="${field.id}" 
             class="${field.classes}"
-            >${field.classes.includes('dynamic') ? '{{' : ''}${this.form.settings.dataName}.${field.id}${field.classes.includes('dynamic') ? '}}' : ''}</textarea>`;
+            >${field.classes.includes('dynamic') ? `{{${this.form.settings.dataName}.${field.id}}}` : ''}</textarea>`;
             
             let child = div.querySelector('textarea'); 
             let config = { // This config sets what the observer is looking for changes in the DOM
@@ -155,8 +155,8 @@ class Form {
     }
 
     updateFormData = (field) => {
-        if (!this.form.data) this.form.data = {};
-        this.form.data[field.id] = field.value;
+        if (!this.form[this.form.settings.dataName]) this.form[this.form.settings.dataName] = {};
+        this.form[this.form.settings.dataName][field.id] = field.value;
     }
 
     loadFile = async (path) => {
