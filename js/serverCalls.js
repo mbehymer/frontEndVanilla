@@ -84,6 +84,8 @@ class ServerConnection {
             }) : 
             viewManager.templateHTML(viewManager.view().name, 'dynamic', false);
 
+        if (isSingleUpdate && element.className.includes('dynamic')) allElements.unshift({ 'originalElement': element, 'updatedElement': element }); // incase the element is also a dynamic field
+
         allElements.forEach(el => {
             let orginal = el.originalElement;
             let toUpdate = el.updatedElement;
