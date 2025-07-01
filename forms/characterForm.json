@@ -78,7 +78,7 @@
                     "displayOrder": 2,
                     "id": "weapon.name",
                     "label": "Weopon Name",
-                    "valueType": "tel",
+                    "valueType": "text",
                     "objType": "field",
                     "type": "input",
                     "classes": "",

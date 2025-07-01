@@ -156,7 +156,20 @@ class Form {
 
     updateFormData = (field) => {
         if (!this.form[this.form.settings.dataName]) this.form[this.form.settings.dataName] = {};
-        this.form[this.form.settings.dataName][field.id] = field.value;
+        let value = field.type === 'number' ? Number(field.value) : field.value
+        
+        // If the value is inside an object, go down the path until you find the place and add it.
+        let path = field.id.split('.');
+        let fieldToUpdate = this.form[this.form.settings.dataName];
+        path.forEach((pathName, index) => {
+            if (index !== path.length - 1) {
+                fieldToUpdate[pathName] = fieldToUpdate[pathName] ? fieldToUpdate[pathName] : {}
+                fieldToUpdate = fieldToUpdate[pathName];
+            } else {
+                fieldToUpdate[pathName] = value;
+            }
+        })
+        // this.form[this.form.settings.dataName][field.id] = value;
     }
 
     loadFile = async (path) => {

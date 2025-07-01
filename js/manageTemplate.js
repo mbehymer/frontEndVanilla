@@ -78,8 +78,12 @@ class ViewManager {
             'original': container.cloneNode(true),
             'updated': container,
             'dynamic': [...container.querySelectorAll('.dynamic')].map( dynamic => {
+
+                let clone = dynamic.cloneNode(true);
+                API.updateSettings(dynamic);
+
                 return {
-                    'originalElement': dynamic.cloneNode(true),
+                    'originalElement': clone,
                     'updatedElement': dynamic
                 }
             })
