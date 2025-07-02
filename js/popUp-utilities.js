@@ -12,15 +12,35 @@ function quickMessage(message, timer={time:5000, enabled:true}, type) {
     const id = 'q-msg-'+crypto.randomUUID();
     msgContainer.classList.add(id);
     let closeBtn = msgContainer.querySelector('.q-msg-close');
+
+
     closeBtn.addEventListener('click', (e)=> {
-        msgContainer.remove();
+        msgContainer.classList.add('fade-out');
+        msgContainer.addEventListener("animationend", ()=>{
+            msgContainer.remove();
+        })
+
+
     })
-    body.appendChild(msgContainer);
+    
+    if (!body.querySelector('#q-msg-container-list')) {
+        let messagesContainer = document.createElement('div');
+        messagesContainer.id = 'q-msg-container-list';
+        messagesContainer.appendChild(msgContainer);
+        body.appendChild(messagesContainer);
+    } else {
+        let messagesContainer = body.querySelector('#q-msg-container-list');
+        messagesContainer.appendChild(msgContainer);
+    }
     //If the timer reaches the time specified, remove the element from the document
     //If there is a specified time run this code
     if (timer.enabled) {
         setTimeout(() =>{
-            msgContainer.remove()
+            
+            msgContainer.classList.add('fade-out');
+            msgContainer.addEventListener("animationend", ()=>{
+                msgContainer.remove()
+            })
         },
         timer.time);
     }

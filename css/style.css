@@ -102,19 +102,42 @@ header {
 }
 
 /****** Quick Message *******/
-.q-msg-container {
+#q-msg-container-list {
     position: absolute;
     top:1rem;
     right: 1rem;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 1rem;
+    overflow: hidden;
+
+}
+.q-msg-container {
     min-width: 200px;
+    max-width: 400px;
     padding: .5rem;
     box-shadow: 0px 0px 5px 0px #00000033;
+    animation: slide-in 0.5s ease-out forwards;
+}
+
+@keyframes slide-in {
+    from {
+        margin-bottom: -200px;
+        transform: translateX(250px); /* Start slightly above the final position */
+        opacity: 0;
+    }
+    to {
+        margin-bottom: 0;
+        transform: translateX(0); /* Final position */
+        opacity: 1;
+    }
 }
 
 .q-msg-close-container {
     display: flex;
     justify-content: end;
 }
+
 .q-msg-close {
     display: flex;
     font-family: monospace;
@@ -146,6 +169,16 @@ header {
 .q-msg-error {
     background-color: #df9090
 }
+
+.fade-out {
+    animation: fade-out 0.5s linear forwards;
+}
+
+@keyframes fade-out {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+
 
 /****** Modal Styles *******/
 
