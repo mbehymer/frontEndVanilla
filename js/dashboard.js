@@ -248,6 +248,7 @@ function createNewCharacter() {
 
 async function importCharacter() {
     const inputFile = document.querySelector('#character-import-file');
+    if (!inputFile.files[0]) return quickMessage('There is no file attached. ', {time: 5000, enabled: true}, 'error');
     file = await readFile(inputFile.files[0]);
     
     const textArea = document.createElement('textarea');
@@ -311,10 +312,10 @@ async function importCharacter() {
 
 // Get the refresh token, and if the user isn't authorized send them ot the login page. Otherwise show the header navigation
 dashboardCtrl = () => {
-        insertHeaderNav('body');
         API.send('grabRefreshToken')
         .then(response => {
             if (response.ok) {
+                insertHeaderNav('body');
                 let form = new Form();
                 form.loadAvailableFunctions(...[{parent: API, func: API.send}]);
                 form.getFormHTML('forms/characterForm.json', 'file').then(res => {
@@ -326,7 +327,7 @@ dashboardCtrl = () => {
             } else {
                
                 viewManager.redirect('login');
-                quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
+                quickMessage(response.msg, {time: 51000, enabled: true}, 'error');
             }
         })
         .catch(err => {

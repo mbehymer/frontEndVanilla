@@ -57,15 +57,15 @@ function transitionToLogin() {
 
 registerCtrl = () => {
     API.send('grabRefreshToken').then(response => {
-        if (response.ok) {
-            insertHeaderNav('body')
-        } else {
+        // if (response.ok) {
+        //     insertHeaderNav('body')
+        // } else {
            
-            // viewManager.redirect('login')
-            quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
-        }
+        //     // viewManager.redirect('login')
+        //     quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
+        // }
     })
     .catch(err => {
-        console.warn('err', error)
+        console.warn('err', err)
     });
 };

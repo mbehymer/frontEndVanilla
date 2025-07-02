@@ -1,5 +1,6 @@
 function insertHeaderNav(parentElement) {
     let parent = document.querySelector(parentElement);
+    if (parent.querySelector('#navbar')) return // There is already a header.
     let navbar = document.createElement('div');
     navbar.id='navbar';
     navbar.innerHTML =`
