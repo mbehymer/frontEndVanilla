@@ -22,7 +22,7 @@ function transitionToRegister() {
 
 loginCtrl = () => {
     let source = document.querySelector('#source-selector');
-    if (!['localhost', '127.0.0.1'].indcludes(location.host.split(':')[0])) {
+    if (!['localhost', '127.0.0.1'].includes(location.host.split(':')[0])) {
 
         source.remove();
         localStorage.setItem('SERVER_SRC', 'https://nodejsserver-a47a.onrender.com/')
