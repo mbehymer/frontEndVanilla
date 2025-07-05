@@ -47,12 +47,26 @@ function verifyPassword(pwd, pwdVerifier) {
 
 function transitionToLogin() {
     let loginContainer = document.querySelector('#register-form');
+    let transitionClass = 'rotateTo90'
+    let existsTransitionClass = [...document.styleSheets].filter(style => {
+        return [...style.cssRules].filter(rule => {
+            return rule?.selectorText?.includes(transitionClass);
+        }).length;
+    }).length > 0;
+ 
+    
     loginContainer.classList.remove('rotateFrom-90');
-    loginContainer.classList.add('rotateTo90');
-    loginContainer.addEventListener("animationend", ()=>{
-       
-        viewManager.redirect('login')
-    }, false);
+
+    if (existsTransitionClass) {
+        
+        loginContainer.classList.add(transitionClass);
+        loginContainer.addEventListener("animationend", ()=>{
+        
+            viewManager.redirect('login')
+        }, false);
+    } else {
+        viewManager.redirect('login');
+    }
 }
 
 registerCtrl = () => {

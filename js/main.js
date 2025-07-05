@@ -13,17 +13,29 @@ function login() {
 
 function transitionToRegister() {
     let loginContainer = document.querySelector('#login-container');
+    let transitionClass = 'rotateTo90'
+    let existsTransitionClass = [...document.styleSheets].filter(style => {
+        return [...style.cssRules].filter(rule => {
+            return rule?.selectorText?.includes(transitionClass);
+        }).length;
+    }).length > 0;
+
+    
     loginContainer.classList.remove('rotateFrom-90');
-    loginContainer.classList.add('rotateTo90');
-    loginContainer.addEventListener("animationend", ()=>{
+
+    if (existsTransitionClass) {
+        loginContainer.classList.add(transitionClass);
+        loginContainer.addEventListener("animationend", ()=>{
+            viewManager.redirect('register')
+        }, false);
+    } else {
         viewManager.redirect('register')
-    }, false);
+    }
 }
 
 loginCtrl = () => {
     let source = document.querySelector('#source-selector');
     if (!['localhost', '127.0.0.1'].includes(location.host.split(':')[0])) {
-
         source.remove();
         localStorage.setItem('SERVER_SRC', 'https://nodejsserver-a47a.onrender.com/')
     } else {
