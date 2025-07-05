@@ -121,7 +121,7 @@ class Form {
 
     generateField = (field) => {
         let div = document.createElement('div');
-        div.classList.add(...["form-element-container", `form-element-order-${field.displayOrder}`]);
+        div.classList.add(...["form-element-container", "form-field", `form-element-order-${field.displayOrder}`]);
         if (field.type === 'input') {
             div.innerHTML = `<label for="${field.id}">${field.label}</label>
             <input 
