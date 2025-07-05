@@ -32,7 +32,7 @@ function processRegistration() {
     })
     .catch(err =>{
         
-        quickMessage(err, {time: 5000, enabled: true}, 'error');
+        quickMessage(err, {time: 5000, enabled: false}, 'error');
     })
 
 
@@ -70,16 +70,16 @@ function transitionToLogin() {
 }
 
 registerCtrl = () => {
-    API.send('grabRefreshToken').then(response => {
-        // if (response.ok) {
-        //     insertHeaderNav('body')
-        // } else {
+    // API.send('grabRefreshToken').then(response => {
+    //     // if (response.ok) {
+    //     //     insertHeaderNav('body')
+    //     // } else {
            
-        //     // viewManager.redirect('login')
-        //     quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
-        // }
-    })
-    .catch(err => {
-        console.warn('err', err)
-    });
+    //     //     // viewManager.redirect('login')
+    //     //     quickMessage(response.msg, {time: 5000, enabled: true}, 'error');
+    //     // }
+    // })
+    // .catch(err => {
+    //     console.warn('err', err)
+    // });
 };
