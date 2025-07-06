@@ -150,6 +150,33 @@ h1, h2, h3, h4, h5, h6 {
     to {opacity: 0;}
 }
 
+/****** Navbar Styles ******/
+
+#navbar .nav-links {
+    display: flex;
+    flex-direction: column;
+}
+
+#navbar .nav-links li {
+    list-style: none;
+    flex-grow:1;
+    text-align: center;
+}
+
+#navbar .nav-links li a {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 100%;
+    text-decoration: none;
+    padding: 0.5rem;
+}
+
+
+#navbar .nav-links li a:hover {
+    background-color: #00000033;
+}
+
+
 
 /****** Modal Styles *******/
 .form-field {
