@@ -34,6 +34,7 @@ class ViewManager {
                 this.templateHTMLSetValue(this.view().name, file);
                 main.replaceChildren(...[this.templateHTML(this.view().name, 'updated')]);//main.innerHTML = this.templateHTML(this.view().name, false, file).innerHTML;
                 this.view().run();
+                this.loadNavbar();
             })
         } catch (err) {
             console.error('loadView:', this.view(), 'Error:', err);
@@ -61,14 +62,11 @@ class ViewManager {
         });
     }; // Probably could use Object.assign({}) here to make this into an object...
 
-
     view = () => {
         let viewParam = this.params().filter(param => param.key === 'view')[0];
         if (viewParam === undefined) return false;
         return this.views[viewParam.value];
     }
-
-
 
     templateHTMLList = {}; // This is to store the original versions of the HTML
     templateHTMLSetValue = (key, value) => {
@@ -130,10 +128,6 @@ class ViewManager {
         // return this.templateHTML(key); // This just executes the first line of this function so I don't have to repeat it...
     }
 
-    
-
-
-   
     redirect(path) {
         if (!this.views.hasOwnProperty(path)) return false;
 
@@ -159,6 +153,7 @@ class ViewManager {
                 (typeof obj.ownerDocument ==="object");
         }
     }
+    
     isHTMLCollection = (obj) => {
         try {
             //Using W3 DOM2 (works for FF, Opera and Chrome)
@@ -175,4 +170,71 @@ class ViewManager {
         }
         
     }
+
+    navbarSettings = {
+        dropdownOpen: true,
+        hasNavbar: false
+    }
+
+    loadNavbar = () => {
+        let parent = document.querySelector('body');
+        if (parent.querySelector('#navbar')) return // There is already a header.
+        let navbar = document.createElement('div');
+        navbar.id='navbar';
+        navbar.innerHTML =`
+                <ul class="nav-links">
+                    <li><a href="index.html?view=editProfile">Edit</a></li>
+                    <li><a href="index.html?view=dashboard">Dashboard</a></li>
+                    <li><a class="btn btn-secondary logout-btn">Logout</a></li>
+                </ul>
+                <span class="toggle-nav">&#9776;</span>
+        `;
+        let firstChild = parent.firstElementChild
+        navbar.querySelector('.logout-btn').addEventListener('click', async () => {
+            await API.send('logout');
+            // navbar.remove();
+            document.querySelector('header').remove();
+            viewManager.redirect('login');
+        })
+        if (firstChild.tagName === 'HEADER') {
+            firstChild.appendChild(navbar);
+        } else {
+        let header = document.createElement('header');
+            header.appendChild(navbar);
+            parent.insertBefore(header, firstChild);
+        }
+    }
 }
+
+
+
+
+function insertHeaderNav(parentElement) {
+    let parent = document.querySelector(parentElement);
+    if (parent.querySelector('#navbar')) return // There is already a header.
+    let navbar = document.createElement('div');
+    navbar.id='navbar';
+    navbar.innerHTML =`
+                <ul class="nav-links">
+                    <li><a href="index.html?view=editProfile">Edit</a></li>
+                    <li><a href="index.html?view=dashboard">Dashboard</a></li>
+                    <li><button class="btn btn-secondary logout-btn">Logout</button></li>
+                </ul>
+                <span class="toggle-nav">&#9776;</span>
+        `;
+    
+    let firstChild = parent.firstElementChild
+    navbar.querySelector('.logout-btn').addEventListener('click', async () => {
+        await API.send('logout');
+        // navbar.remove();
+        document.querySelector('header').remove();
+        viewManager.redirect('login');
+    })
+    if (firstChild.tagName === 'HEADER') {
+        firstChild.appendChild(navbar);
+    } else {
+    let header = document.createElement('header');
+        header.appendChild(navbar);
+        parent.insertBefore(header, firstChild);
+    }
+};
