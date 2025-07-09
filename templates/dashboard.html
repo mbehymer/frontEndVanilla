@@ -8,7 +8,8 @@
             </div>
         </div>
         <div class="grid-item-righ grid-item">
-            <div id="character-form">
+            <button class="mobile btn btn-lg btn-primary" id="show-character-form" onclick="(() => {document.querySelector('#character-form').classList.toggle('mb-hide')})()">Create Character</button>
+            <div id="character-form" class="mb-hide">
                 <!-- <div>
                     <label for="character-name">Name</label>
                     <input id="character-name" type="text">
