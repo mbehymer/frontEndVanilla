@@ -196,22 +196,24 @@ class ViewManager {
         let firstChild = parent.firstElementChild;
         let navLinks = navbar.querySelector('.nav-links');
         let dropDownBtn = navbar.querySelector('.toggle-nav span')
-        navLinks.addEventListener('transitionend', (event) => {
-            if ([...event.target.classList].includes('slide-up')) {
-                console.log('end-before', navLinks.classList);
-                navLinks.classList.add('hide');
-                console.log('end-after', navLinks.classList);
-            }
-        });
-        navLinks.addEventListener('transitionstart', (event) => {
-            if (![...event.target.classList].includes('slide-up')) {
-                console.log('start-before', navLinks.classList);
-                navLinks.classList.remove('hide');
-                console.log('start-after', navLinks.classList);
-            }
-        });
+        // navLinks.addEventListener('transitionend', (event) => {
+        //     if ([...event.target.classList].includes('slide-up')) {
+        //         console.log('end-before', navLinks.classList);
+        //         navLinks.classList.add('hide');
+        //         console.log('end-after', navLinks.classList);
+        //     }
+        // });
+        // navLinks.addEventListener('transitionstart', (event) => {
+        //     if (![...event.target.classList].includes('slide-up')) {
+        //         console.log('start-before', navLinks.classList);
+        //         navLinks.classList.remove('hide');
+        //         console.log('start-after', navLinks.classList);
+        //     }
+        // });
         dropDownBtn.addEventListener('click', (e) => {
             if (!this.isMobile() && window.innerWidth > 412) return;
+
+            if ([...navLinks.classList].includes('slide-up')) navLinks.classList.remove('hide');
             navLinks.classList.toggle('slide-up');
 
             // navLinks.classList.toggle('hide');
