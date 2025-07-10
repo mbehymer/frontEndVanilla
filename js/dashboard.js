@@ -24,19 +24,25 @@ function createCharacterElement(character) {
     let containerDetails = Object.entries(character)
         .filter(([key, value]) => { return key !== "id" && key !== "name"})
         .map(([key, value]) => {
+            
+            let infoContainer = document.createElement('div');
+            infoContainer.classList.add('character-card-data-container');
             let label = document.createElement('span');
-            let data = document.createElement('span');
+            let data = document.createElement('div');
+            data.classList.add('character-card-data');
             if (typeof value !== 'object') {
-                label.innerText = key + ": ";
+                label.innerHTML = key + `: `;
 
                 if (typeof value === 'number' && value < 50) { // Just for fun
                     console.log('character-card', getComputedStyle(container));
-                    data = document.createElement('div');
-                    data.classList.add('character-card-bars-container');
+                    data.innerHTML = `<div class="mb-show ">${value}</div>`;
+                    
+                    let bars = document.createElement('div');
+                    bars.classList.add('character-card-bars-container');
                     let groupedBarsSize = 5;
                     for(let i=1; i< (Math.ceil(value/groupedBarsSize) + 1); i++) {
                         let groupedBars = document.createElement('div');
-                        groupedBars.classList.add('character-card-grouped-bars');
+                        groupedBars.classList.add('character-card-grouped-bars', 'mb-hide');
                         let lastGroup = (i % Math.ceil(value/groupedBarsSize)) === 0;
 
                         for(let j=0; j<groupedBarsSize; j++) {
@@ -48,15 +54,20 @@ function createCharacterElement(character) {
                             }
                             groupedBars.appendChild(bar);
                         }
-                        data.appendChild(groupedBars);
+                        bars.appendChild(groupedBars);
                     }
+                    data.appendChild(bars);
                 } else {
                     data.innerText = value;
                 }
             } else {
-
+                label.innerText = key;
+                data.innerText = '{...}'
+                infoContainer.addEventListener('click', (e) => {
+                    data.classList.add('character-card-data-object');
+                    data.innerText = JSON.stringify(value);
+                }, {once: true})
             }
-            let infoContainer = document.createElement('p');
             infoContainer.appendChild(label);
             infoContainer.appendChild(data);
             return infoContainer;
@@ -118,12 +129,15 @@ function createCharacterElement(character) {
             })
     });
 
-    editBtn.innerText = 'View';
+    editBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
     editBtn.classList.add('btn', 'btn-primary');
     name.innerHTML = character.name;
-    containerDetails.unshift(name);
-    containerDetails.push(editBtn);
-    container.replaceChildren(...containerDetails);
+    mainContent = document.createElement('div');
+    mainContent.classList.add('character-card-content')
+    // containerDetails.unshift(name);
+    // containerDetails.push(editBtn);
+    mainContent.replaceChildren(...containerDetails);
+    container.replaceChildren(name, mainContent, editBtn);
 
     return container;
     
