@@ -6,7 +6,8 @@ function processGettingCharacters() {
         if (response.ok) {
             response.json().then((characters)=>{
                 dataStore.characters = characters;
-                loadCharacters(characters)
+                loadCharacters(characters);
+                document.querySelector('#show-character-list').classList.remove('hide');
             });
         } else {
             quickMessage(response.msg, {time: 5000, enabled: true}, 'error')
@@ -137,7 +138,7 @@ function createCharacterElement(character) {
     // containerDetails.unshift(name);
     // containerDetails.push(editBtn);
     mainContent.replaceChildren(...containerDetails);
-    container.replaceChildren(name, mainContent, editBtn);
+    container.replaceChildren(editBtn, name, mainContent);
 
     return container;
     
@@ -171,12 +172,14 @@ function getCharacter(id) { // TODO Put this code into a class for dataStore tha
 
 function createEditCharacterModal(character) {
     let modalBody = document.createElement('div');
+    modalBody.classList.add('form-content');
 
     function addEntry(entry, path) {
         let label = entry[0];
         let value = entry[1];
         let newPath = [...path, label];
         let field = document.createElement('div');
+        field.classList.add('form-field')
         if (typeof value !== 'object') {
             const id = label + '-' + crypto.randomUUID();
             let valueType = typeof value === 'number' ? 'number' : 'text';
