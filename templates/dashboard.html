@@ -3,6 +3,8 @@
     <div class="grid-dashboard">
         <div class="grid-item-left grid-item">
             <button id="get-characters-btn" onclick="processGettingCharacters()" class="btn btn-primary">Get Characters</button>
+            
+            <button class="mobile btn btn-full btn-primary hide" id="show-character-list" onclick="(() => {document.querySelector('#characters-container').classList.toggle('shrink'); let i = document.querySelector('#show-character-list i'); i.classList.toggle('flip')})()"><i class="fa-solid fa-chevron-up"></i></button>
             <div id="characters-container">
                 <p>No data has been requested</p>
             </div>

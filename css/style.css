@@ -16,7 +16,9 @@ body {
 
 main {
     margin: 0 auto;
+    padding: 0.5rem;
 }
+
 h1, h2, h3, h4, h5, h6 {
     margin: 1rem 0;
 }
@@ -97,6 +99,14 @@ h1, h2, h3, h4, h5, h6 {
 
 .mb-show {
     display: revert;
+}
+
+.flip {
+    transform: rotateX(180deg);
+}
+
+.shrink {
+    height: 300px !important;
 }
 
 /****** Quick Message *******/
@@ -248,6 +258,49 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /****** Modal Styles *******/
+
+body:has(.modal-backdrop) {
+    overflow:hidden;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    background-color: #00000055;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.modal-container {
+    background-color: #ffffff;
+    margin: 10vh 0.25rem;
+    padding: 1rem;
+    box-shadow: 0px 0px 5px 0px #00000033;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.modal-footer {
+    display: flex;
+    margin-top: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+}
+
+
+/****** Form Styles  *******/
 .form-field {
     width: 100%;
     display: flex;
@@ -305,18 +358,25 @@ h1, h2, h3, h4, h5, h6 {
 
 /******* DASHBOARD ********/
 
+.grid-item-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 #characters-container {
     border-top: 1px dashed #c1c1c1;
     border-bottom: 1px dashed #c1c1c1;
-    overflow: scroll
+    overflow: scroll;
+    height: auto;
+    transition: height 0.1s;
 }
 
 .character-card {
     padding: 0.5rem 1rem;
     width: 100%;
-    min-width: 500px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 3px;
     box-sizing: border-box;
 }
@@ -336,7 +396,7 @@ h1, h2, h3, h4, h5, h6 {
 .character-card-content {
     flex: 3;
     display: flex; 
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     gap: 5px;
 }
@@ -352,7 +412,6 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     flex-direction: column;
     flex: 1;
-    max-width: 25%;
 }
 
 .character-card-data {
@@ -389,3 +448,25 @@ h1, h2, h3, h4, h5, h6 {
     background: #c3c3c3;
     border-radius: 2px;
 } 
+
+
+#show-character-list i {
+    transition: transform 1s;
+}
+
+
+
+
+.modal-body > div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+
+
+#character-import {
+    overflow: hidden;
+}
