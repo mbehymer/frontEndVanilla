@@ -332,7 +332,7 @@ dashboardCtrl = () => {
         API.send('grabRefreshToken')
         .then(response => {
             if (response.ok) {
-                insertHeaderNav('body');
+                // insertHeaderNav('body');
                 let form = new Form();
                 form.loadAvailableFunctions(...[{parent: API, func: API.send}]);
                 form.getFormHTML('forms/characterForm.json', 'file').then(res => {
