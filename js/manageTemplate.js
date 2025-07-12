@@ -4,6 +4,11 @@ const VIEW_CONSTANTS = {
 
 
 class ViewManager {
+
+    constructor () {
+        
+    }
+
     views = {
         dashboard: {
             name: 'dashboard',
@@ -187,15 +192,15 @@ class ViewManager {
         navbar.id='navbar';
         navbar.innerHTML =`
                 <ul class="nav-links slide-up">
-                    <li><a href="index.html?view=editProfile">Edit</a></li>
-                    <li><a href="index.html?view=dashboard">Dashboard</a></li>
+                    <li><a href="?view=editProfile">Edit</a></li>
+                    <li><a href="?view=dashboard">Dashboard</a></li>
                     <li><a class="btn btn-secondary logout-btn">Logout</a></li>
                 </ul>
                 <div class="toggle-nav"><span>&#9776;</span></div>
         `;
         let firstChild = parent.firstElementChild;
         let navLinks = navbar.querySelector('.nav-links');
-        let dropDownBtn = navbar.querySelector('.toggle-nav span')
+        let dropDownBtn = navbar.querySelector('.toggle-nav span');
         // navLinks.addEventListener('transitionend', (event) => {
         //     if ([...event.target.classList].includes('slide-up')) {
         //         console.log('end-before', navLinks.classList);
@@ -240,32 +245,32 @@ class ViewManager {
 
 
 
-function insertHeaderNav(parentElement) {
-    let parent = document.querySelector(parentElement);
-    if (parent.querySelector('#navbar')) return // There is already a header.
-    let navbar = document.createElement('div');
-    navbar.id='navbar';
-    navbar.innerHTML =`
-                <ul class="nav-links">
-                    <li><a href="index.html?view=editProfile">Edit</a></li>
-                    <li><a href="index.html?view=dashboard">Dashboard</a></li>
-                    <li><button class="btn btn-secondary logout-btn">Logout</button></li>
-                </ul>
-                <span class="toggle-nav">&#9776;</span>
-        `;
+// function insertHeaderNav(parentElement) {
+//     let parent = document.querySelector(parentElement);
+//     if (parent.querySelector('#navbar')) return // There is already a header.
+//     let navbar = document.createElement('div');
+//     navbar.id='navbar';
+//     navbar.innerHTML =`
+//                 <ul class="nav-links">
+//                     <li><a href="index.html?view=editProfile">Edit</a></li>
+//                     <li><a href="index.html?view=dashboard">Dashboard</a></li>
+//                     <li><button class="btn btn-secondary logout-btn">Logout</button></li>
+//                 </ul>
+//                 <span class="toggle-nav">&#9776;</span>
+//         `;
     
-    let firstChild = parent.firstElementChild
-    navbar.querySelector('.logout-btn').addEventListener('click', async () => {
-        await API.send('logout');
-        // navbar.remove();
-        document.querySelector('header').remove();
-        viewManager.redirect('login');
-    })
-    if (firstChild.tagName === 'HEADER') {
-        firstChild.appendChild(navbar);
-    } else {
-    let header = document.createElement('header');
-        header.appendChild(navbar);
-        parent.insertBefore(header, firstChild);
-    }
-};
+//     let firstChild = parent.firstElementChild
+//     navbar.querySelector('.logout-btn').addEventListener('click', async () => {
+//         await API.send('logout');
+//         // navbar.remove();
+//         document.querySelector('header').remove();
+//         viewManager.redirect('login');
+//     })
+//     if (firstChild.tagName === 'HEADER') {
+//         firstChild.appendChild(navbar);
+//     } else {
+//     let header = document.createElement('header');
+//         header.appendChild(navbar);
+//         parent.insertBefore(header, firstChild);
+//     }
+// };

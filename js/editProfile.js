@@ -27,7 +27,7 @@ function populateForm(user) {
 
 
 function editProfileCtrl() {
-    insertHeaderNav('body');
+    // insertHeaderNav('body');
     API.send('grabRefreshToken')
     .then(response => {
         if (response.ok) {

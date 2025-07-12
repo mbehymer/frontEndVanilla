@@ -451,7 +451,7 @@ body:has(.modal-backdrop) {
 
 
 #show-character-list i {
-    transition: transform 1s;
+    transition: transform 0.25s;
 }
 
 
@@ -461,7 +461,7 @@ body:has(.modal-backdrop) {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
     gap: 1rem;
 }
 
