@@ -46,3 +46,6 @@ Another idea, which isn't fully flushed out is that I could have everything load
 
 ##### Option 3
 I don't like this option, but I could have each of the components re-render each time a dynamic field is updated. I feel like this would use way to many resources and be excessive, doing more than it needs to.
+
+
+## Work on Mobile first design then wider styles.
