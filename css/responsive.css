@@ -1,3 +1,11 @@
+@media (min-width:450px) {
+    .mobile {
+        display:none !important;
+    }
+    .mb-show {
+        display: none !important;
+    }
+}
 /* Overrides */
 /* * {
     padding: 0;
