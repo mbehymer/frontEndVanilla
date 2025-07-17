@@ -265,7 +265,7 @@ function createNewCharacter() {
 
 async function importCharacter() {
     const inputFile = document.querySelector('#character-import-file');
-    if (!inputFile.files[0]) return quickMessage('There is no file attached. ', {time: 5000, enabled: true}, 'error');
+    if (!inputFile.files[0]) return quickMessage('There is no file attached. ', {time: 5000, enabled: false}, 'error');
     file = await readFile(inputFile.files[0]);
     
     const textArea = document.createElement('textarea');
