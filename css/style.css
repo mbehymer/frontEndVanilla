@@ -112,7 +112,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /****** Quick Message *******/
 #q-msg-container-list {
-    position: absolute;
+    position: fixed;
     top:1rem;
     right: 1rem;
     display: flex;
@@ -380,7 +380,6 @@ body:has(.modal-backdrop) {
 }
 
 #characters-container {
-    overflow: scroll;
     height: auto;
     transition: height 0.1s;
 }
@@ -404,6 +403,9 @@ body:has(.modal-backdrop) {
 
 .character-card:not(:last-child) {
     border-bottom: 1px dashed #c1c1c1;
+}
+#characters-container:has(.character-card:not(:last-child)) {
+    overflow: scroll;
 }
 
 .character-card h3 {

@@ -5,6 +5,27 @@
     .mb-show {
         display: none !important;
     }
+
+    .character-card {
+        flex-direction: row;
+    }
+
+    .character-card h3 {
+        text-align: center;
+    }
+
+    .character-card-content {
+        flex-direction: row;
+    }
+
+    .character-card-data-container {
+        border-left: 1px dashed;
+        text-align: center;
+    }
+
+    .character-card-data {
+        background-color: unset;
+    }
 }
 /* Overrides */
 /* * {
