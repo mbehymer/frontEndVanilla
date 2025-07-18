@@ -1,4 +1,4 @@
-@media (min-width:600px) {
+@media (min-width:400px) {
     .mobile {
         display:none !important;
     }
@@ -6,8 +6,35 @@
         display: none !important;
     }
 
+    /* Navvar */
+    #navbar .toggle-nav {
+        display: none;
+    }
+
+
+    #navbar .nav-links {
+        position: revert;
+        flex-direction: row;
+        justify-content: end;
+    }
+
+    #navbar .nav-links li {
+        flex-grow: unset;
+    }
+
+
+
+
+
+
+
+
+
+
+    /* Dashboard */
     .character-card {
         flex-direction: row;
+        min-width: 600px;
     }
 
     .character-card h3 {

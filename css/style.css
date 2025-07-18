@@ -303,6 +303,13 @@ body:has(.modal-backdrop) {
 
 
 /****** Form Styles  *******/
+
+.form-element-container {
+    width: 100%;
+    max-width: clamp(100px, calc(90vw - 2rem), 400px);
+    margin: 0 auto;
+}
+
 .form-field {
     width: 100%;
     display: flex;
@@ -313,7 +320,7 @@ body:has(.modal-backdrop) {
     color: #444;
     font-family: sans-serif;
     transition: font-size 0.25s;
-    max-width: 300px;
+    /* max-width: 300px; */
     box-sizing: border-box;
 }
 
