@@ -46,17 +46,27 @@ class ViewManager {
                 return res.text();
             })
             .then(file => {
-                let main = document.querySelector('main'); // At some point this should be changed so that it doesn't use the body, but rather gets put into whatever parent container it was requested for... So it could be part of a template.
+
                 this.templateHTMLSetValue(this.view().name, file);
+                return this.loadFunctions();
+
+            }).then(res => {
+
+                let main = document.querySelector('main'); // At some point this should be changed so that it doesn't use the body, but rather gets put into whatever parent container it was requested for... So it could be part of a template.
                 main.replaceChildren(...[this.templateHTML(this.view().name, 'updated')]);//main.innerHTML = this.templateHTML(this.view().name, false, file).innerHTML;
                 this.view().run();
-                this.loadNavbar();
+
+                if (API.settings.role) this.loadNavbar();
             })
         } catch (err) {
             console.error('loadView:', this.view(), 'Error:', err);
         }
     }
 
+
+    async loadFunctions() {
+        if (!API.settings.role) await API.send('grabRefreshToken');
+    }
     // refreshView() {
     //     try {
     //         if (!this.view()) this.redirect('login');
@@ -118,30 +128,6 @@ class ViewManager {
                 if (this.templateHTMLList[key]['dynamic'] === undefined) throw Error(`Missing value for ${key} in the dynamic fields`);
                 return this.templateHTMLList[key]['dynamic']
         }
-        // if (!value) {
-        //     return type === 'original' ? 
-        //     this.templateHTMLList[key]['original'].cloneNode(true) : 
-        //     this.templateHTMLList[key]['updated'];//.innerHTML; // I don't know that this will really be all that useful to clone and only send the innerHTML seems like cloning is pointless...
-        // }
-
-        // let container = document.createElement('div');
-        // if (this.isElement(value)) {
-        //     container.appendChild(value);
-        // } else if (this.isHTMLCollection(value)) {
-        //     container.replaceChildren(...value)
-        // } else {
-        //     container.innerHTML = value;
-        // }
-        // if (this.templateHTMLList[key]['original'] === undefined) {
-        //     this.templateHTMLList[key]['original'] = container;
-        // }
-        
-        // if (this.templateHTMLList[key]['updated'] === undefined) {
-        //     this.templateHTMLList[key]['updated'] = container.cloneNode(true);
-        // } else {
-        //     this.templateHTMLList[key]['updated'].replaceChildren(...container.children); // this is important so that we always keep the same nod as that will be the reference
-        // }
-        // return this.templateHTML(key); // This just executes the first line of this function so I don't have to repeat it...
     }
 
     redirect(path) {
@@ -186,6 +172,7 @@ class ViewManager {
     }
 
     loadNavbar = () => {
+
         let parent = document.querySelector('body');
         if (parent.querySelector('#navbar')) return // There is already a header.
         let navbar = document.createElement('div');
