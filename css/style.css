@@ -308,6 +308,7 @@ body:has(.modal-backdrop) {
     width: 100%;
     max-width: clamp(100px, calc(90vw - 2rem), 400px);
     margin: 0 auto;
+    margin-top: 1rem;
 }
 
 .form-field {

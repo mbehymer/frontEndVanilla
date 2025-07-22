@@ -36,7 +36,7 @@ function createCharacterElement(character) {
 
                 if (typeof value === 'number' && value < 50) { // Just for fun
                     console.log('character-card', getComputedStyle(container));
-                    data.innerHTML = `<div class="mb-show ">${value}</div>`;
+                    data.innerHTML = `<div class="">${value}</div>`;
                     
                     let bars = document.createElement('div');
                     bars.classList.add('character-card-bars-container');

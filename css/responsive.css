@@ -6,6 +6,10 @@
         display: none !important;
     }
 
+    .mb-hide {
+        display: revert !important;
+    }
+
     /* Navvar */
     #navbar .toggle-nav {
         display: none;
@@ -21,14 +25,6 @@
     #navbar .nav-links li {
         flex-grow: unset;
     }
-
-
-
-
-
-
-
-
 
 
     /* Dashboard */
@@ -52,6 +48,25 @@
 
     .character-card-data {
         background-color: unset;
+    }
+}
+
+
+@media (min-width:1200px) {
+    .grid-dashboard {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1rem;
+    }
+    
+    .grid-dashboard > * {
+        border: 1px solid #00000033;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+
+    .grid-item-right {
+        margin: 0;
     }
 }
 /* Overrides */
