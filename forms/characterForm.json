@@ -37,15 +37,7 @@
                     "type": "input",
                     "classes": "",
                     "objDepth": 2
-                }
-            ],
-            "classes": "",
-            "objDepth": 1
-        },
-        {
-            "displayOrder": 2,
-            "objType": "container",
-            "items": [
+                },
                 {
                     "displayOrder": 1,
                     "id": "power",
@@ -61,7 +53,7 @@
             "objDepth": 1
         },
         {
-            "displayOrder": 3,
+            "displayOrder": 2,
             "objType": "container",
             "items": [
                 {
