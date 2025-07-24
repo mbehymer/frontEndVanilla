@@ -28,6 +28,11 @@
 
 
     /* Dashboard */
+
+    .header {
+        margin: 2rem 1rem;
+    }
+
     .character-card {
         flex-direction: row;
         min-width: 600px;
