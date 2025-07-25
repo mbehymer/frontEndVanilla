@@ -33,6 +33,11 @@
         margin: 2rem 1rem;
     }
 
+    .grid-item-left {
+        resize: vertical;
+        overflow: hidden;
+    }
+
     .character-card {
         flex-direction: row;
         min-width: 600px;
