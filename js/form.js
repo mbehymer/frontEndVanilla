@@ -3,7 +3,11 @@ class Form {
         this.observer = new MutationObserver((mutationsList, observer) => {
             // console.log('field ID:', field.id);
             // console.log(mutationsList); // Process the changes here
-            this.updateFormData(mutationsList.target);
+            if (Array.isArray(mutationsList)) {
+                mutationsList.forEach(mut => {
+                    this.updateFormData(mut.target)
+                })
+            } else this.updateFormData(mutationsList.target);
 
         });
         
