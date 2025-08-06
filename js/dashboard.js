@@ -325,6 +325,19 @@ async function importCharacter() {
 }
 
 
+function toggleSizeBtn() {
+    let charsContainer = document.querySelector('.grid-item-left');
+    let btn = document.createElement('button');
+    btn.id = 'toggle-chars-container';
+    btn.classList.add('btn','btn-primary','btn-full');
+
+    if (charsContainer.querySelector('#toggle-chars-container')) return;
+
+    charsContainer.appendChild(btn);    
+    
+}
+
+
 // =================== On Load Run Code Below ====================
 
 // Get the refresh token, and if the user isn't authorized send them ot the login page. Otherwise show the header navigation
@@ -351,4 +364,9 @@ dashboardCtrl = () => {
             console.error('Error', err);
             quickMessage(err, {time: 5000, enabled: true}, 'error');
         });
+
+        let showCharacterList = document.querySelector('#get-characters-btn');
+        showCharacterList.addEventListener('click', event => {
+            toggleSizeBtn();
+        })
 }
